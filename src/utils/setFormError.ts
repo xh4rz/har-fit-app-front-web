@@ -1,18 +1,16 @@
-import { UseFormSetError } from 'react-hook-form';
+import { UseFormSetError, FieldValues, Path } from 'react-hook-form';
 import { ApiError } from '@/infrastructure/interfaces';
 
-export const setFormError = (
-	setError: UseFormSetError<any>,
-	error: unknown,
-	field: string = 'root'
+export const setFormError = <T extends FieldValues>(
+	setError: UseFormSetError<T>,
+	error: ApiError,
+	field: Path<T> | 'root' = 'root'
 ) => {
-	const errorObj = error as ApiError;
+	const message = Array.isArray(error.message)
+		? error.message.join('\n\n')
+		: error.message;
 
-	const message = Array.isArray(errorObj.message)
-		? errorObj.message.join('\n\n')
-		: errorObj.message;
-
-	setError(field, {
+	setError(field as Path<T>, {
 		type: 'custom',
 		message
 	});

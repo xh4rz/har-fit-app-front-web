@@ -1,0 +1,173 @@
+'use client';
+
+import { useState } from 'react';
+import Link from 'next/link';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { useAuthStore } from '@/modules/auth/store/useAuthStore';
+import {
+	passwordValidationRules,
+	signupFormSchema
+} from '@/modules/auth/validation/signupFormSchema';
+import { Button } from '@/components/ui/button';
+import {
+	Card,
+	CardContent,
+	CardFooter,
+	CardHeader,
+	CardTitle
+} from '@/components/ui/card';
+import { Field, FieldGroup } from '@/components/ui/field';
+import { FormInput } from '@/components/molecules';
+import { CheckCircleIcon, SignInIcon } from '@phosphor-icons/react';
+import { setFormError } from '@/utils';
+import { Separator } from '@/components/ui/separator';
+import { ApiError } from '@/infrastructure/interfaces';
+
+type SignupFormData = z.infer<typeof signupFormSchema>;
+
+export const SignupView = () => {
+	const { register } = useAuthStore();
+
+	const [loading, setLoading] = useState(false);
+
+	const {
+		control,
+		handleSubmit,
+		setError,
+		clearErrors,
+		watch,
+		formState: { errors }
+	} = useForm<SignupFormData>({
+		resolver: zodResolver(signupFormSchema),
+		mode: 'onChange',
+		defaultValues: {
+			fullName: '',
+			email: '',
+			password: '',
+			confirmPassword: ''
+		}
+	});
+
+	const password = watch('password') || '';
+
+	const rules = passwordValidationRules.map((rule) => ({
+		label: rule.label,
+		valid: rule.test(password)
+	}));
+
+	const onSubmit = async (data: SignupFormData) => {
+		setLoading(true);
+		clearErrors('root');
+		try {
+			await register(data.fullName, data.email, data.password);
+		} catch (error) {
+			const errorObj = error as ApiError;
+
+			setFormError(setError, errorObj);
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	return (
+		<Card className="w-full sm:max-w-md">
+			<CardHeader className="flex items-center justify-center h-20">
+				<CardTitle className="text-4xl font-bold text-primary">
+					HarFit<span className="text-secondary">App</span>
+				</CardTitle>
+			</CardHeader>
+
+			<CardContent>
+				<form id="form-login" onSubmit={handleSubmit(onSubmit)}>
+					<FieldGroup>
+						<FormInput
+							required
+							control={control}
+							name="fullName"
+							label="Full Name"
+							placeholder="Enter your Full Name"
+							type="text"
+							autoComplete="username webauthn"
+						/>
+						<FormInput
+							required
+							control={control}
+							name="email"
+							label="Email"
+							placeholder="Enter your email"
+							type="email"
+							autoComplete="email webauthn"
+						/>
+						<FormInput
+							required
+							control={control}
+							name="password"
+							label="Password"
+							placeholder="Enter your password"
+							type="password"
+							autoComplete="new-password webauthn"
+						/>
+
+						<FormInput
+							required
+							control={control}
+							name="confirmPassword"
+							label="Repeat Password"
+							placeholder="Repeat your password"
+							type="password"
+							autoComplete="new-password webauthn"
+						/>
+					</FieldGroup>
+				</form>
+
+				<div className="my-6">
+					<Separator />
+				</div>
+
+				<div className="flex flex-col">
+					<span className="text-white mb-2">Password requirements: </span>
+					{rules.map((rule, index) => (
+						<div
+							key={index}
+							className={`flex gap-1 items-center text-[13px] mb-0.5 ${
+								rule.valid ? 'text-green-500' : 'text-gray-400'
+							}`}
+						>
+							<CheckCircleIcon size={18} /> {rule.label}
+						</div>
+					))}
+				</div>
+
+				{errors.root && (
+					<div className="mt-5">
+						<span className="text-destructive">{errors.root.message}</span>
+					</div>
+				)}
+			</CardContent>
+			<CardFooter>
+				<Field orientation="vertical">
+					<Button
+						type="submit"
+						form="form-login"
+						variant="secondary"
+						loading={loading}
+						iconLeft={<SignInIcon />}
+					>
+						Register
+					</Button>
+
+					<div className="flex justify-center">
+						<span>
+							Already have an account?{' '}
+							<Button asChild variant="link" className="px-0">
+								<Link href="/login">Login</Link>
+							</Button>
+						</span>
+					</div>
+				</Field>
+			</CardFooter>
+		</Card>
+	);
+};

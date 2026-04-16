@@ -1,13 +1,11 @@
 import axios from 'axios';
 import { StorageAdapter } from '@/adapters/storage-adapter';
-
-// import { StorageAdapter } from '@/adapters/storage-adapter';
-// import { parseAxiosError } from '@/utils';
+import { parseAxiosError } from '@/utils';
 // import { authRefreshToken } from '@/modules/auth/services/authRefresh';
 // import { useAuthStore } from '@/modules/auth/store/useAuthStore';
 
 const axiosClient = axios.create({
-	baseURL: process.env.EXPO_PUBLIC_API_URL,
+	baseURL: process.env.NEXT_PUBLIC_API_URL,
 	headers: {
 		'Content-Type': 'application/json'
 	}
@@ -26,41 +24,49 @@ axiosClient.interceptors.request.use(
 	(error) => Promise.reject(error)
 );
 
-// axiosClient.interceptors.response.use(
-// 	(response) => response,
-// 	async (error) => {
-// 		const originalRequest = error.config;
+axiosClient.interceptors.response.use(
+	(response) => response,
+	async (error) => {
+		// const originalRequest = error.config;
 
-// 		if (
-// 			error.response &&
-// 			error.response.status === 401 &&
-// 			!originalRequest._retry
-// 		) {
-// 			originalRequest._retry = true;
+		// if (
+		// 	error.response &&
+		// 	error.response.status === 401 &&
+		// 	!originalRequest._retry
+		// ) {
+		// 	originalRequest._retry = true;
 
-// 			try {
-// 				const refreshToken = await StorageAdapter.getItem('refreshToken');
+		// 	try {
+		// 		const refreshToken = await StorageAdapter.getItem('refreshToken');
 
-// 				if (!refreshToken) {
-// 					throw new Error('No refresh token available');
-// 				}
+		// 		if (!refreshToken) {
+		// 			throw new Error('No refresh token available');
+		// 		}
 
-// 				const data = await authRefreshToken(refreshToken);
+		// 		const data = await authRefreshToken(refreshToken);
 
-// 				await StorageAdapter.setItem('accessToken', data.accessToken);
-// 				await StorageAdapter.setItem('refreshToken', data.refreshToken);
+		// 		await StorageAdapter.setItem('accessToken', data.accessToken);
+		// 		await StorageAdapter.setItem('refreshToken', data.refreshToken);
 
-// 				originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
+		// 		originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
 
-// 				return axiosClient(originalRequest);
-// 			} catch (error) {
-// 				await useAuthStore.getState().logout();
+		// 		return axiosClient(originalRequest);
+		// 	} catch (error) {
+		// 		await useAuthStore.getState().logout();
 
-// 				return Promise.reject(parseAxiosError(error));
-// 			}
-// 		}
-// 		return Promise.reject(parseAxiosError(error));
-// 	}
-// );
+		// 		return Promise.reject(parseAxiosError(error));
+		// 	}
+		// }
+		// return Promise.reject(parseAxiosError(error));
+
+		// const parsed = parseAxiosError(error);
+
+		// if (isServer) {
+		// 	throw new Error(JSON.stringify(parsed));
+		// }
+
+		return Promise.reject(parseAxiosError(error));
+	}
+);
 
 export default axiosClient;

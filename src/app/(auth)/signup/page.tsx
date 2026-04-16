@@ -1,5 +1,5 @@
-import React from 'react';
+import { SignupView } from '@/components/views/SignupView';
 
 export default function SignupPage() {
-	return <div>SignupPage</div>;
+	return <SignupView />;
 }

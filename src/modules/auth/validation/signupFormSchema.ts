@@ -2,19 +2,19 @@ import { z } from 'zod';
 
 export const passwordValidationRules = [
 	{
-		label: '• 1 uppercase',
+		label: '1 uppercase',
 		test: (value: string) => /[A-Z]/.test(value)
 	},
 	{
-		label: '• 1 lowercase',
+		label: '1 lowercase',
 		test: (value: string) => /[a-z]/.test(value)
 	},
 	{
-		label: '• 1 number',
+		label: '1 number',
 		test: (value: string) => /\d/.test(value)
 	},
 	{
-		label: '• 1 special (@$!%*?&.#_-)',
+		label: '1 special (@$!%*?&.#_-)',
 		test: (value: string) => /[@$!%*?&.#_-]/.test(value)
 	}
 ];

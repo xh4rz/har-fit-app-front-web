@@ -10,15 +10,20 @@ export const parseAxiosError = (error: unknown): ApiError => {
 			return axiosError.response.data;
 		}
 
-		if (axiosError.code === 'ERR_NETWORK') {
-			const networkError: ApiError = {
+		const networkCodes = [
+			'ERR_NETWORK',
+			'ECONNREFUSED',
+			'ENOTFOUND',
+			'ETIMEDOUT',
+			'ECONNRESET'
+		];
+
+		if (axiosError.code && networkCodes.includes(axiosError.code)) {
+			return {
 				message: ['Network error. Check your connection'],
 				error: 'Network Error',
 				statusCode: 0
 			};
-
-			console.error('Network error:', networkError);
-			return networkError;
 		}
 	}
 
