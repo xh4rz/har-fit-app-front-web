@@ -1,11 +1,12 @@
-import axiosClient from '@/api/axiosClient';
+import { axiosAuthClient } from '@/api/axiosClient';
 import { Auth } from '@/infrastructure/interfaces';
+import { clearAuthCookies } from './clearAuthCookies';
 
 export const authLogin = async (email: string, password: string) => {
 	email = email.toLowerCase();
 
 	try {
-		const { data } = await axiosClient.post<Auth>('/auth/login', {
+		const { data } = await axiosAuthClient.post<Auth>('/auth/login', {
 			email,
 			password
 		});
@@ -22,11 +23,31 @@ export const authRegister = async (
 	password: string
 ) => {
 	try {
-		const { data } = await axiosClient.post<Auth>('/auth/register', {
+		const { data } = await axiosAuthClient.post<Auth>('/auth/register', {
 			fullName: name,
 			email,
 			password
 		});
+
+		return data;
+	} catch (error) {
+		throw error;
+	}
+};
+
+export const authLogout = async () => {
+	try {
+		const { data } = await axiosAuthClient.post('/auth/logout');
+
+		return data;
+	} catch {
+		clearAuthCookies();
+	}
+};
+
+export const authRefreshToken = async () => {
+	try {
+		const { data } = await axiosAuthClient.post('/auth/refresh-token');
 
 		return data;
 	} catch (error) {

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -28,6 +29,8 @@ import { ApiError } from '@/infrastructure/interfaces';
 type SignupFormData = z.infer<typeof signupFormSchema>;
 
 export const SignupView = () => {
+	const router = useRouter();
+
 	const { register } = useAuthStore();
 
 	const [loading, setLoading] = useState(false);
@@ -62,6 +65,8 @@ export const SignupView = () => {
 		clearErrors('root');
 		try {
 			await register(data.fullName, data.email, data.password);
+
+			router.replace('/home');
 		} catch (error) {
 			const errorObj = error as ApiError;
 

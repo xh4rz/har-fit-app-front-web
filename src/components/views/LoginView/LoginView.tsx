@@ -20,10 +20,13 @@ import { useAuthStore } from '@/modules/auth/store/useAuthStore';
 import { SignInIcon } from '@phosphor-icons/react';
 import { setFormError } from '@/utils';
 import { ApiError } from '@/infrastructure/interfaces';
+import { useRouter } from 'next/navigation';
 
 type LoginFormData = z.infer<typeof loginFormSchema>;
 
 export const LoginView = () => {
+	const router = useRouter();
+
 	const { login } = useAuthStore();
 
 	const [loading, setLoading] = useState(false);
@@ -47,6 +50,8 @@ export const LoginView = () => {
 
 		try {
 			await login(data.email, data.password);
+
+			router.replace('/home');
 		} catch (error) {
 			const errorObj = error as ApiError;
 

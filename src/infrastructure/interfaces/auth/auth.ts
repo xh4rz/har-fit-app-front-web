@@ -1,10 +1,5 @@
 import { User } from '..';
 
-export interface Auth extends Token {
+export interface Auth {
 	user: User;
-}
-
-export interface Token {
-	accessToken: string;
-	refreshToken: string;
 }
