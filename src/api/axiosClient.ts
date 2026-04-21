@@ -4,7 +4,7 @@ import { useAuthStore } from '@/modules/auth/store/useAuthStore';
 import { authRefreshToken } from '@/modules/auth/services/auth';
 
 const baseConfig: AxiosRequestConfig = {
-	baseURL: process.env.NEXT_PUBLIC_API_URL,
+	baseURL: '/api',
 	headers: {
 		'Content-Type': 'application/json',
 		'x-client-type': 'web'
