@@ -18,14 +18,19 @@ export function AppContextProvider({ children }: AppContextProps) {
 		const initAuth = async () => {
 			if (routes.public.includes(pathname)) return;
 
+			useAuthStore.setState({ loading: true });
+
 			try {
 				const user = await getUser();
 
 				useAuthStore.setState({ isAuthenticated: true, user });
-			} catch {}
+			} finally {
+				useAuthStore.setState({ loading: false });
+			}
 		};
 
 		initAuth();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 	return <ReactQueryContextProvider>{children}</ReactQueryContextProvider>;
 }

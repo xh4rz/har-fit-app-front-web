@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -31,15 +30,12 @@ type SignupFormData = z.infer<typeof signupFormSchema>;
 export const SignupView = () => {
 	const router = useRouter();
 
-	const { register } = useAuthStore();
-
-	const [loading, setLoading] = useState(false);
+	const { register, loading } = useAuthStore();
 
 	const {
 		control,
 		handleSubmit,
 		setError,
-		clearErrors,
 		watch,
 		formState: { errors }
 	} = useForm<SignupFormData>({
@@ -61,8 +57,6 @@ export const SignupView = () => {
 	}));
 
 	const onSubmit = async (data: SignupFormData) => {
-		setLoading(true);
-		clearErrors('root');
 		try {
 			await register(data.fullName, data.email, data.password);
 
@@ -71,8 +65,6 @@ export const SignupView = () => {
 			const errorObj = error as ApiError;
 
 			setFormError(setError, errorObj);
-		} finally {
-			setLoading(false);
 		}
 	};
 
@@ -132,7 +124,7 @@ export const SignupView = () => {
 				</div>
 
 				<div className="flex flex-col">
-					<span className="text-white mb-2">Password requirements: </span>
+					<span className="mb-2">Password requirements: </span>
 					{rules.map((rule, index) => (
 						<div
 							key={index}
@@ -166,7 +158,7 @@ export const SignupView = () => {
 					<div className="flex justify-center">
 						<span>
 							Already have an account?{' '}
-							<Button asChild variant="link" className="px-0">
+							<Button variant="link" className="px-0" disabled={loading}>
 								<Link href="/login">Login</Link>
 							</Button>
 						</span>

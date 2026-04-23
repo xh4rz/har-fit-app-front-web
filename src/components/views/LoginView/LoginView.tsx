@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -27,9 +26,7 @@ type LoginFormData = z.infer<typeof loginFormSchema>;
 export const LoginView = () => {
 	const router = useRouter();
 
-	const { login } = useAuthStore();
-
-	const [loading, setLoading] = useState(false);
+	const { login, loading } = useAuthStore();
 
 	const {
 		control,
@@ -46,8 +43,6 @@ export const LoginView = () => {
 	});
 
 	const onSubmit = async (data: LoginFormData) => {
-		setLoading(true);
-
 		try {
 			await login(data.email, data.password);
 
@@ -65,8 +60,6 @@ export const LoginView = () => {
 			}
 
 			setFormError(setError, errorObj);
-		} finally {
-			setLoading(false);
 		}
 	};
 
@@ -124,7 +117,7 @@ export const LoginView = () => {
 					<div className="flex justify-center">
 						<span>
 							Don&apos;t have an account?{' '}
-							<Button asChild variant="link" className="px-0">
+							<Button variant="link" className="px-0" disabled={loading}>
 								<Link href="/signup">Sign Up</Link>
 							</Button>
 						</span>
