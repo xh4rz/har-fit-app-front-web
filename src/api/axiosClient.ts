@@ -2,6 +2,7 @@ import axios, { AxiosRequestConfig } from 'axios';
 import { parseAxiosError } from '@/utils';
 import { useAuthStore } from '@/modules/auth/store/useAuthStore';
 import { authRefreshToken } from '@/modules/auth/services/auth';
+import { clearAuthCookies } from '@/modules/auth/services/clearAuthCookies';
 
 const baseConfig: AxiosRequestConfig = {
 	baseURL: '/api',
@@ -37,6 +38,8 @@ axiosClient.interceptors.response.use(
 				return axiosClient(originalRequest);
 			} catch (error) {
 				useAuthStore.getState().logout();
+
+				clearAuthCookies();
 
 				return Promise.reject(parseAxiosError(error));
 			}

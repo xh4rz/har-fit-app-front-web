@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { ReactQueryContextProvider } from './ReactQueryContext';
 import { getUser } from '@/modules/auth/services/getUser';
 import { useAuthStore } from '@/modules/auth/store/useAuthStore';
-import { routes } from '@/config/routes';
+import { routeUtils } from '@/lib/routes';
 
 interface AppContextProps {
 	children: ReactNode;
@@ -16,7 +16,7 @@ export function AppContextProvider({ children }: AppContextProps) {
 
 	useEffect(() => {
 		const initAuth = async () => {
-			if (routes.public.includes(pathname)) return;
+			if (routeUtils.isPublic(pathname)) return;
 
 			useAuthStore.setState({ loading: true });
 
@@ -32,5 +32,6 @@ export function AppContextProvider({ children }: AppContextProps) {
 		initAuth();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+
 	return <ReactQueryContextProvider>{children}</ReactQueryContextProvider>;
 }

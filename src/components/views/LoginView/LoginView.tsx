@@ -75,6 +75,7 @@ export const LoginView = () => {
 					<FieldGroup>
 						<FormInput
 							required
+							disabled={loading}
 							control={control}
 							name="email"
 							label="Email"
@@ -84,6 +85,7 @@ export const LoginView = () => {
 						/>
 						<FormInput
 							required
+							disabled={loading}
 							control={control}
 							name="password"
 							label="Password"

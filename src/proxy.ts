@@ -1,10 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { routes } from './config/routes';
-
-const isProtected = (path: string) =>
-	routes.private.some((r) => path.startsWith(r));
-
-const isAuth = (path: string) => routes.public.some((r) => path.startsWith(r));
+import { routeUtils } from './lib/routes/route.utils';
 
 export function proxy(request: NextRequest) {
 	const refreshToken = request.cookies.get('refreshToken')?.value;
@@ -13,11 +8,11 @@ export function proxy(request: NextRequest) {
 
 	const { pathname } = request.nextUrl;
 
-	if (!isLoggedIn && isProtected(pathname)) {
+	if (!isLoggedIn && routeUtils.isPrivate(pathname)) {
 		return NextResponse.redirect(new URL('/login', request.url));
 	}
 
-	if (isLoggedIn && isAuth(pathname)) {
+	if (isLoggedIn && routeUtils.isPublic(pathname)) {
 		return NextResponse.redirect(new URL('/home', request.url));
 	}
 

@@ -81,15 +81,17 @@ export const SignupView = () => {
 					<FieldGroup>
 						<FormInput
 							required
+							disabled={loading}
 							control={control}
 							name="fullName"
 							label="Full Name"
 							placeholder="Enter your Full Name"
 							type="text"
-							autoComplete="username webauthn"
+							autoComplete="name webauthn"
 						/>
 						<FormInput
 							required
+							disabled={loading}
 							control={control}
 							name="email"
 							label="Email"
@@ -99,6 +101,7 @@ export const SignupView = () => {
 						/>
 						<FormInput
 							required
+							disabled={loading}
 							control={control}
 							name="password"
 							label="Password"
@@ -109,6 +112,7 @@ export const SignupView = () => {
 
 						<FormInput
 							required
+							disabled={loading}
 							control={control}
 							name="confirmPassword"
 							label="Repeat Password"
