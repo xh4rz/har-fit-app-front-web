@@ -47,9 +47,9 @@ export const authLogout = async () => {
 
 export const authRefreshToken = async () => {
 	try {
-		const { data } = await axiosAuthClient.post('/auth/refresh-token');
+		await axiosAuthClient.post('/auth/refresh-token');
 
-		return data;
+		return true;
 	} catch (error) {
 		throw error;
 	}

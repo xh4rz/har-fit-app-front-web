@@ -1,5 +1,5 @@
-import { Card } from '@/components/ui/card';
+import { ExerciseView } from '@/components/views';
 
 export default function ExercisePage() {
-	return <Card className="p-5">ExercisePage</Card>;
+	return <ExerciseView />;
 }

@@ -24,6 +24,8 @@ axiosAuthClient.interceptors.response.use(
 	}
 );
 
+let refreshingToken: Promise<boolean> | null = null;
+
 axiosClient.interceptors.response.use(
 	(response) => response,
 	async (error) => {
@@ -33,10 +35,16 @@ axiosClient.interceptors.response.use(
 			originalRequest._retry = true;
 
 			try {
-				await authRefreshToken();
+				refreshingToken = refreshingToken ?? authRefreshToken();
+
+				await refreshingToken;
+
+				refreshingToken = null;
 
 				return axiosClient(originalRequest);
 			} catch (error) {
+				refreshingToken = null;
+
 				useAuthStore.getState().logout();
 
 				clearAuthCookies();

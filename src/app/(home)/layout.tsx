@@ -12,9 +12,7 @@ export default function HomeLayout({
 
 			<SidebarTrigger />
 
-			<div className="flex justify-center items-center min-h-screen p-4 w-full">
-				<div className="w-full max-w-md">{children}</div>
-			</div>
+			<div className="w-full p-6">{children}</div>
 		</SidebarProvider>
 	);
 }
