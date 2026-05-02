@@ -8,3 +8,4 @@ export * from './ExerciseInfo';
 export * from './ExerciseInstructions';
 export * from './Tabs';
 export * from './Dialog';
+export * from './FormMultipleCombobox';

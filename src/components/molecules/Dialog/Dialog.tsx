@@ -9,6 +9,7 @@ import {
 	DialogHeader,
 	DialogTitle
 } from '@/components/ui/dialog';
+import { cn } from '@/lib/utils';
 
 type DialogProps = {
 	open: boolean;
@@ -30,12 +31,12 @@ export const Dialog = ({
 	description,
 	saveLabel = 'Save',
 	cancelLabel = 'Cancel',
-	className = 'sm:max-w-sm',
+	className = '',
 	idForm
 }: DialogProps) => {
 	return (
 		<UIDialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className={className}>
+			<DialogContent className={cn('w-full sm:min-w-lg', className)}>
 				<DialogHeader>
 					<DialogTitle>{title}</DialogTitle>
 					<DialogDescription>{description ?? ''}</DialogDescription>

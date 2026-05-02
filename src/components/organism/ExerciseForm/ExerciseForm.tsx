@@ -26,7 +26,11 @@ import {
 import { setFormError } from '@/utils';
 import { useRouter } from 'next/navigation';
 import { FieldGroup } from '@/components/ui/field';
-import { FormInput, FormSelect } from '@/components/molecules';
+import {
+	FormInput,
+	FormMultipleCombobox,
+	FormSelect
+} from '@/components/molecules';
 
 interface ExerciseFormProps {
 	mode: 'create' | 'edit';
@@ -235,6 +239,7 @@ export const ExerciseForm = ({
 					loading={isPendingEquipments}
 					data={dataEquipments}
 				/>
+
 				<FormSelect
 					required
 					disabled={loading}
@@ -242,6 +247,16 @@ export const ExerciseForm = ({
 					name="primaryMuscleId"
 					label="Primary Muscle"
 					placeholder="Select Primary Muscle"
+					loading={isPendingMuscles}
+					data={dataMuscles}
+				/>
+
+				<FormMultipleCombobox
+					disabled={loading}
+					control={control}
+					name="secondaryMuscleIds"
+					label="Secondary Muscles"
+					placeholder="Select Other Muscles"
 					loading={isPendingMuscles}
 					data={dataMuscles}
 				/>

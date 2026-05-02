@@ -108,7 +108,6 @@ export const ExerciseView = () => {
 				onOpenChange={setShowModalCreateExercise}
 				title="Create Exercise"
 				idForm={formId}
-				className="min-w-lg"
 			>
 				<ExerciseForm mode="create" idForm={formId} />
 			</Dialog>

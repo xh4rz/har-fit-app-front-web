@@ -39,7 +39,7 @@ export const DefaultSelect = <T extends BaseSelectItem>({
 				)}
 			</SelectTrigger>
 			<SelectContent position="popper" className="rounded-sm">
-				<SelectGroup className="h-58 overflow-y-auto scrollbar-thin scrollbar-thumb-primary hover:scrollbar-thumb-secondary scrollbar-track-transparent">
+				<SelectGroup>
 					{!loading && !data && (
 						<div className="py-4 text-sm text-muted-foreground  flex justify-center items-center h-full ">
 							No options available

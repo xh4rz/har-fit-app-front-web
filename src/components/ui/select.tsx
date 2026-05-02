@@ -19,7 +19,10 @@ function SelectGroup({
 	return (
 		<SelectPrimitive.Group
 			data-slot="select-group"
-			className={cn('scroll-my-1 p-1', className)}
+			className={cn(
+				'scroll-my-1 p-1 max-h-58 overflow-y-auto scrollbar-thin scrollbar-thumb-primary hover:scrollbar-thumb-secondary scrollbar-track-transparent',
+				className
+			)}
 			{...props}
 		/>
 	);
@@ -124,7 +127,7 @@ function SelectItem({
 		>
 			<span className="pointer-events-none absolute right-2 flex size-4 items-center justify-center">
 				<SelectPrimitive.ItemIndicator>
-					<CheckIcon className=" pointer-events-none text-primary" />
+					<CheckIcon className="pointer-events-none text-primary" />
 				</SelectPrimitive.ItemIndicator>
 			</span>
 			<SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>

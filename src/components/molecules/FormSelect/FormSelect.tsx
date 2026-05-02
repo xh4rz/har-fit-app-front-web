@@ -23,9 +23,9 @@ type FormSelectProps<T extends BaseSelectItem, F extends FieldValues> = {
 	control: Control<F>;
 	label: string;
 	placeholder: string;
+	loading: boolean;
 	required?: boolean;
 	data?: T[];
-	loading: boolean;
 } & Omit<
 	React.ComponentProps<typeof Select>,
 	'value' | 'defaultValue' | 'onValueChange'
@@ -35,9 +35,9 @@ export const FormSelect = <T extends BaseSelectItem, F extends FieldValues>({
 	control,
 	label,
 	placeholder,
+	loading,
 	required,
 	data,
-	loading,
 	...selectProps
 }: FormSelectProps<T, F>) => {
 	return (
@@ -72,7 +72,7 @@ export const FormSelect = <T extends BaseSelectItem, F extends FieldValues>({
 						</SelectTrigger>
 
 						<SelectContent position="popper" className="rounded-sm">
-							<SelectGroup className="h-58 overflow-y-auto scrollbar-thin scrollbar-thumb-primary hover:scrollbar-thumb-secondary scrollbar-track-transparent">
+							<SelectGroup>
 								{!loading && !data && (
 									<div className="py-4 text-sm text-muted-foreground  flex justify-center items-center h-full ">
 										No options available
