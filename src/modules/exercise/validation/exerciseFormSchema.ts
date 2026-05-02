@@ -3,8 +3,8 @@ import { z } from 'zod';
 export const exerciseFormSchema = z.object({
 	title: z
 		.string()
-		.min(1, { message: 'Exercise name is required' })
-		.min(6, { message: 'Exercise name must be at least 6 characters' }),
+		.min(1, { message: 'Exercise title is required' })
+		.min(6, { message: 'Exercise title must be at least 6 characters' }),
 
 	equipmentId: z.number().min(1, {
 		message: 'Equipment is required'

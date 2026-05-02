@@ -1,5 +1,6 @@
 'use client';
 
+import { useId, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getExercises } from '@/modules/exercise/services/exercise';
 import { getMuscles } from '@/modules/exercise/services/muscle';
@@ -7,12 +8,17 @@ import { getEquipments } from '@/modules/exercise/services/equipment';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ExerciseItem, FormSelect } from '@/components/molecules';
+import { DefaultSelect, Dialog, ExerciseItem } from '@/components/molecules';
 import { Separator } from '@/components/ui/separator';
-import { PlusIcon } from '@phosphor-icons/react';
+import { ExerciseForm } from '@/components/organism';
 import { cn } from '@/lib/utils';
+import { PlusIcon } from '@phosphor-icons/react';
 
 export const ExerciseView = () => {
+	const formId = `form-create-exercise-${useId()}`;
+
+	const [showModalCreateExercise, setShowModalCreateExercise] = useState(false);
+
 	const {
 		data: dataExercises,
 		isPending: isPendingExercises,
@@ -67,19 +73,20 @@ export const ExerciseView = () => {
 						variant="ghost"
 						className="text-secondary"
 						iconLeft={<PlusIcon />}
+						onClick={() => setShowModalCreateExercise(true)}
 					>
 						Add Exercise
 					</Button>
 				</div>
 				<div>
-					<FormSelect
+					<DefaultSelect
 						placeHolder="Select Muscle"
 						data={dataMuscles}
 						loading={isPendingMuscles}
 					/>
 				</div>
 				<div>
-					<FormSelect
+					<DefaultSelect
 						placeHolder="Select Equipment"
 						data={dataEquipments}
 						loading={isPendingEquipments}
@@ -96,6 +103,15 @@ export const ExerciseView = () => {
 					))}
 				</div>
 			</div>
+			<Dialog
+				open={showModalCreateExercise}
+				onOpenChange={setShowModalCreateExercise}
+				title="Create Exercise"
+				idForm={formId}
+				className="min-w-lg"
+			>
+				<ExerciseForm mode="create" idForm={formId} />
+			</Dialog>
 		</Card>
 	);
 };
