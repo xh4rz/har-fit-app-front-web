@@ -19,10 +19,7 @@ function SelectGroup({
 	return (
 		<SelectPrimitive.Group
 			data-slot="select-group"
-			className={cn(
-				'scroll-my-1 p-1 max-h-58 overflow-y-auto scrollbar-thin scrollbar-thumb-primary hover:scrollbar-thumb-secondary scrollbar-track-transparent',
-				className
-			)}
+			className={cn('scroll-my-1 p-1 max-h-58 scrollbar-custom', className)}
 			{...props}
 		/>
 	);

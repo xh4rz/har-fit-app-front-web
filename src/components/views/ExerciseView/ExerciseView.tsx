@@ -95,7 +95,7 @@ export const ExerciseView = () => {
 				<div>
 					<Separator />
 				</div>
-				<div className="overflow-y-auto scrollbar-thin scrollbar-thumb-primary hover:scrollbar-thumb-secondary scrollbar-track-transparent">
+				<div className="scrollbar-custom">
 					{dataExercises?.map((exercise) => (
 						<div className="mr-2" key={exercise.id}>
 							<ExerciseItem exercise={exercise} />

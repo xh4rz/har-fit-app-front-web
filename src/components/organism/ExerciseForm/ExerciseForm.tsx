@@ -27,6 +27,7 @@ import { setFormError } from '@/utils';
 import { useRouter } from 'next/navigation';
 import { FieldGroup } from '@/components/ui/field';
 import {
+	ExerciseInputInstructions,
 	FormInput,
 	FormMultipleCombobox,
 	FormSelect
@@ -256,9 +257,14 @@ export const ExerciseForm = ({
 					control={control}
 					name="secondaryMuscleIds"
 					label="Secondary Muscles"
-					placeholder="Select Other Muscles"
+					placeholder="Search Other Muscles"
 					loading={isPendingMuscles}
 					data={dataMuscles}
+				/>
+
+				<ExerciseInputInstructions
+					control={control}
+					error={errors.instruction}
 				/>
 			</FieldGroup>
 		</form>
