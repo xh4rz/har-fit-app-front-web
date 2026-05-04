@@ -1,51 +1,37 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
 	ExerciseFormData,
 	exerciseFormSchema
 } from '@/modules/exercise/validation/exerciseFormSchema';
-// import { Button, Input, Separator, Text } from '@/components/atoms';
-// import {
-// 	ExerciseInputInstructions,
-// 	ExerciseVideoUpload,
-// 	SelectField
-// } from '@/components/molecules';
-// import { BottomSheetSelectList } from '../BottomSheetSelectList';
-// import { BottomSheetVideoOptions } from '../BottomSheetVideoOptions';
-import { getEquipments } from '@/modules/exercise/services/equipment';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { getEquipments } from '@/modules/exercise/services/equipment';
 import { getMuscles } from '@/modules/exercise/services/muscle';
-// import { usePickVideo } from '@/hooks';
+
 import {
-	postExercise,
-	patchExerciseById
+	postExercise
+	// patchExerciseById
 } from '@/modules/exercise/services/exercise';
-import { setFormError } from '@/utils';
-import { useRouter } from 'next/navigation';
 import { FieldGroup } from '@/components/ui/field';
 import {
 	ExerciseInputInstructions,
 	FormInput,
 	FormMultipleCombobox,
-	FormSelect
+	FormSelect,
+	FormVideoUpload
 } from '@/components/molecules';
+import { setFormError } from '@/utils';
+import { ApiError } from '@/infrastructure/interfaces';
 
 interface ExerciseFormProps {
 	mode: 'create' | 'edit';
 	defaultValues?: ExerciseFormData;
 	idForm: string;
 }
-
-const emptyFile = {
-	uri: '',
-	fileName: '',
-	mimeType: '',
-	width: 0,
-	height: 0
-};
 
 export const ExerciseForm = ({
 	defaultValues,
@@ -65,12 +51,8 @@ export const ExerciseForm = ({
 	const {
 		control,
 		handleSubmit,
-		setError,
-		clearErrors,
-		setValue,
-		watch,
 		formState: { errors },
-		setFocus
+		setError
 	} = useForm<ExerciseFormData>({
 		resolver: zodResolver(exerciseFormSchema),
 		mode: 'onChange',
@@ -80,20 +62,11 @@ export const ExerciseForm = ({
 			primaryMuscleId: 0,
 			secondaryMuscleIds: [],
 			instruction: [],
-			file: emptyFile
+			file: undefined
 		}
 	});
 
 	const [loading, setLoading] = useState(false);
-
-	const [showModalOptionsVideo, setShowModalOptionsVideo] = useState(false);
-
-	const [showModalEquipment, setShowModalEquipment] = useState(false);
-
-	const [showModalPrimaryMuscle, setShowModalPrimaryMuscle] = useState(false);
-
-	const [showModalSecondaryMuscle, setShowModalSecondaryMuscle] =
-		useState(false);
 
 	const { data: dataEquipments, isPending: isPendingEquipments } = useQuery({
 		queryKey: ['equipments'],
@@ -106,58 +79,6 @@ export const ExerciseForm = ({
 		queryFn: getMuscles,
 		initialData: () => queryClient.getQueryData(['muscles'])
 	});
-
-	const { file, equipmentId, primaryMuscleId, secondaryMuscleIds } = watch();
-
-	const equipmentText =
-		dataEquipments?.find((i) => i.id === equipmentId)?.name || 'Select';
-
-	const primaryMuscleText =
-		dataMuscles?.find((i) => i.id === primaryMuscleId)?.name || 'Select';
-
-	const secondaryMuscleText =
-		dataMuscles
-			?.filter((i) => secondaryMuscleIds?.includes(i.id))
-			.map((i) => i.name)
-			.join(', ') || 'Select';
-
-	const handleChangeSelectSingle =
-		(field: 'equipmentId' | 'primaryMuscleId') => (ids: number[]) => {
-			setValue(field, ids[0] ?? 0);
-			clearErrors(field);
-		};
-
-	const handleChangeSelectMultiple =
-		(field: 'secondaryMuscleIds') => (ids: number[]) => {
-			setValue(field, ids);
-			clearErrors(field);
-		};
-
-	const equipmentError = errors.equipmentId?.message;
-
-	const primaryMuscleError = errors.primaryMuscleId?.message;
-
-	// const { loadingVideo, selectVideo, captureVideo, removeVideo } = usePickVideo(
-	// 	(video) => {
-	// 		setValue(
-	// 			'file',
-	// 			{
-	// 				uri: video.uri,
-	// 				fileName: video.fileName ?? 'video.mp4',
-	// 				mimeType: video.mimeType ?? 'video/mp4',
-	// 				width: video.width,
-	// 				height: video.height,
-	// 				fileSize: video.fileSize
-	// 			},
-	// 			{ shouldValidate: true }
-	// 		);
-	// 		clearErrors('file');
-	// 	},
-	// 	() => {
-	// 		setValue('file', emptyFile, { shouldValidate: true });
-	// 		clearErrors('file');
-	// 	}
-	// );
 
 	const onSubmitExercise = async (data: ExerciseFormData) => {
 		setLoading(true);
@@ -179,16 +100,10 @@ export const ExerciseForm = ({
 			const instructions = data.instruction.map((i) => i.text);
 			formData.append('instruction', JSON.stringify(instructions));
 
-			const hasVideoChanged =
-				data.file?.uri && data.file.uri !== defaultValues?.file?.uri;
+			// const hasVideoChanged =
+			// 	data.file?.uri && data.file.uri !== defaultValues?.file?.uri;
 
-			if (hasVideoChanged) {
-				formData.append('file', {
-					uri: data.file.uri,
-					name: data.file.fileName,
-					type: data.file.mimeType
-				} as any);
-			}
+			formData.append('file', data.file);
 
 			if (mode === 'create') {
 				await postExercise(formData);
@@ -211,7 +126,8 @@ export const ExerciseForm = ({
 
 			router.back();
 		} catch (error) {
-			// setFormError(setError, error);
+			const errorObj = error as ApiError;
+			setFormError(setError, errorObj);
 		} finally {
 			setLoading(false);
 		}
@@ -220,6 +136,14 @@ export const ExerciseForm = ({
 	return (
 		<form id={idForm} onSubmit={handleSubmit(onSubmitExercise)}>
 			<FieldGroup>
+				<FormVideoUpload
+					required
+					disabled={loading}
+					control={control}
+					name="file"
+					label="Upload exercise video"
+				/>
+
 				<FormInput
 					required
 					disabled={loading}

@@ -1,5 +1,15 @@
 import { z } from 'zod';
 
+const MAX_FILE_SIZE = 2 * 1024 * 1024;
+
+const VALID_MIME_TYPES = [
+	'video/mp4', // mp4
+	'video/quicktime', // mov
+	'video/x-msvideo', // avi
+	'video/webm', // webm
+	'video/x-matroska' // mkv
+];
+
 export const exerciseFormSchema = z.object({
 	title: z
 		.string()
@@ -16,14 +26,6 @@ export const exerciseFormSchema = z.object({
 
 	secondaryMuscleIds: z.array(z.number()).optional(),
 
-	// instruction: z
-	// 	.array(
-	// 		z.string().min(1, {
-	// 			message: 'Add at least one instruction to the exercise'
-	// 		})
-	// 	)
-	// 	.min(1, { message: 'At least one instruction is required' }),
-
 	instruction: z
 		.array(
 			z.object({
@@ -35,21 +37,11 @@ export const exerciseFormSchema = z.object({
 		.min(1, { message: 'At least one instruction is required' }),
 
 	file: z
-		.object({
-			uri: z.string(),
-			fileName: z.string(),
-			mimeType: z.string(),
-			width: z.number(),
-			height: z.number(),
-			fileSize: z.number().optional()
+		.instanceof(File, { message: 'Video is required' })
+		.refine((file) => VALID_MIME_TYPES.includes(file.type), {
+			message: 'Invalid video format'
 		})
-		.refine((file) => !!file.uri, {
-			message: 'Video is required'
-		})
-		.refine((file) => file.mimeType.startsWith('video/'), {
-			message: 'File must be a video'
-		})
-		.refine((file) => (file.fileSize ?? 0) <= 2 * 1024 * 1024, {
+		.refine((file) => file.size <= MAX_FILE_SIZE, {
 			message: 'Video must be smaller than 2MB'
 		})
 });
