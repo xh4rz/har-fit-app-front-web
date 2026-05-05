@@ -1,6 +1,6 @@
 'use client';
 
-import { useId, useState } from 'react';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getExercises } from '@/modules/exercise/services/exercise';
 import { getMuscles } from '@/modules/exercise/services/muscle';
@@ -15,8 +15,6 @@ import { cn } from '@/lib/utils';
 import { PlusIcon } from '@phosphor-icons/react';
 
 export const ExerciseView = () => {
-	const formId = `form-create-exercise-${useId()}`;
-
 	const [showModalCreateExercise, setShowModalCreateExercise] = useState(false);
 
 	const {
@@ -103,13 +101,13 @@ export const ExerciseView = () => {
 					))}
 				</div>
 			</div>
+
 			<Dialog
 				open={showModalCreateExercise}
 				onOpenChange={setShowModalCreateExercise}
 				title="Create Exercise"
-				idForm={formId}
 			>
-				<ExerciseForm mode="create" idForm={formId} />
+				<ExerciseForm mode="create" onOpenChange={setShowModalCreateExercise} />
 			</Dialog>
 		</Card>
 	);

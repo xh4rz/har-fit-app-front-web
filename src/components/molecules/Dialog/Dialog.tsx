@@ -1,11 +1,8 @@
 import type { ReactNode } from 'react';
-import { Button } from '@/components/ui/button';
 import {
 	Dialog as UIDialog,
-	DialogClose,
 	DialogContent,
 	DialogDescription,
-	DialogFooter,
 	DialogHeader,
 	DialogTitle
 } from '@/components/ui/dialog';
@@ -16,11 +13,12 @@ type DialogProps = {
 	onOpenChange: (open: boolean) => void;
 	title: string;
 	children: ReactNode;
-	idForm?: string;
 	description?: string;
-	saveLabel?: string;
-	cancelLabel?: string;
 	className?: string;
+	// footer?: boolean;
+	// idForm?: string;
+	// saveLabel?: string;
+	// cancelLabel?: string;
 };
 
 export const Dialog = ({
@@ -29,10 +27,11 @@ export const Dialog = ({
 	title,
 	children,
 	description,
-	saveLabel = 'Save',
-	cancelLabel = 'Cancel',
-	className = '',
-	idForm
+	className = ''
+	// footer,
+	// idForm,
+	// saveLabel = 'Save',
+	// cancelLabel = 'Cancel',
 }: DialogProps) => {
 	return (
 		<UIDialog open={open} onOpenChange={onOpenChange}>
@@ -44,17 +43,19 @@ export const Dialog = ({
 
 				{children}
 
-				<DialogFooter>
-					<DialogClose asChild>
-						<Button variant="outline">{cancelLabel}</Button>
-					</DialogClose>
+				{/* {footer && (
+					<DialogFooter>
+						<DialogClose asChild>
+							<Button variant="outline">{cancelLabel}</Button>
+						</DialogClose>
 
-					{idForm && (
-						<Button type="submit" variant="secondary" form={idForm}>
-							{saveLabel}
-						</Button>
-					)}
-				</DialogFooter>
+						{idForm && (
+							<Button type="submit" variant="secondary" form={idForm}>
+								{saveLabel}
+							</Button>
+						)}
+					</DialogFooter>
+				)} */}
 			</DialogContent>
 		</UIDialog>
 	);

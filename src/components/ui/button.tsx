@@ -51,12 +51,14 @@ function Button({
 	children,
 	disabled,
 	iconLeft,
+	iconRight,
 	...props
 }: React.ComponentProps<'button'> &
 	VariantProps<typeof buttonVariants> & {
 		asChild?: boolean;
 		loading?: boolean;
 		iconLeft?: ReactElement<IconProps>;
+		iconRight?: ReactElement<IconProps>;
 	}) {
 	const Comp = asChild ? Slot.Root : 'button';
 
@@ -72,9 +74,10 @@ function Button({
 			{loading ? (
 				<Spinner data-icon="inline-start" />
 			) : (
-				<div className="flex items-center gap-1">
+				<div className="flex justify-center items-center gap-1">
 					{iconLeft && cloneElement(iconLeft)}
 					{children}
+					{iconRight && cloneElement(iconRight)}
 				</div>
 			)}
 		</Comp>

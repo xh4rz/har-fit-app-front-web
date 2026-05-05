@@ -11,3 +11,4 @@ export * from './Dialog';
 export * from './FormMultipleCombobox';
 export * from './ExerciseInputInstructions';
 export * from './FormVideoUpload';
+export * from './ExerciseActionsDropdown';

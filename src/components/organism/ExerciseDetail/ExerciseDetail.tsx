@@ -1,4 +1,7 @@
+'use client';
+
 import {
+	ExerciseActionsDropdown,
 	ExerciseInfo,
 	ExerciseInstructions,
 	Tabs
@@ -9,9 +12,15 @@ import { Exercise } from '@/infrastructure/interfaces';
 
 interface ExerciseDetailProps {
 	exercise: Exercise;
+	onEdit: () => void;
+	onDelete: () => void;
 }
 
-export const ExerciseDetail = ({ exercise }: ExerciseDetailProps) => {
+export const ExerciseDetail = ({
+	exercise,
+	onEdit,
+	onDelete
+}: ExerciseDetailProps) => {
 	const tabs = [
 		{
 			value: 'howto',
@@ -37,6 +46,9 @@ export const ExerciseDetail = ({ exercise }: ExerciseDetailProps) => {
 	return (
 		<div className="flex flex-col gap-4">
 			<Card className="h-full sm:min-h-96 sm:h-96 rounded-lg p-4">
+				<div>
+					<ExerciseActionsDropdown onEdit={onEdit} onDelete={onDelete} />
+				</div>
 				<div className="flex flex-col sm:flex-row h-full gap-4">
 					<div className="flex-1 flex justify-center items-center">
 						<ExerciseInfo exercise={exercise} />

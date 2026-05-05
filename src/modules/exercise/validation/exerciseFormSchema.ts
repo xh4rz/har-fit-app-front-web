@@ -10,40 +10,45 @@ const VALID_MIME_TYPES = [
 	'video/x-matroska' // mkv
 ];
 
-export const exerciseFormSchema = z.object({
-	title: z
-		.string()
-		.min(1, { message: 'Exercise title is required' })
-		.min(6, { message: 'Exercise title must be at least 6 characters' }),
+const fileSchema = z
+	.instanceof(File, { message: 'Video is required' })
+	.refine((file) => VALID_MIME_TYPES.includes(file.type), {
+		message: 'Invalid video format'
+	})
+	.refine((file) => file.size <= MAX_FILE_SIZE, {
+		message: 'Video must be smaller than 2MB'
+	});
 
-	equipmentId: z.number().min(1, {
-		message: 'Equipment is required'
-	}),
+export const getExerciseFormSchema = (mode: 'create' | 'edit') =>
+	z.object({
+		title: z
+			.string()
+			.min(1, { message: 'Exercise title is required' })
+			.min(6, { message: 'Exercise title must be at least 6 characters' }),
 
-	primaryMuscleId: z.number().min(1, {
-		message: 'Primary muscle is required'
-	}),
+		equipmentId: z.number().min(1, {
+			message: 'Equipment is required'
+		}),
 
-	secondaryMuscleIds: z.array(z.number()).optional(),
+		primaryMuscleId: z.number().min(1, {
+			message: 'Primary muscle is required'
+		}),
 
-	instruction: z
-		.array(
-			z.object({
-				text: z
-					.string()
-					.min(1, { message: 'Add at least one instruction to the exercise' })
-			})
-		)
-		.min(1, { message: 'At least one instruction is required' }),
+		secondaryMuscleIds: z.array(z.number()).optional(),
 
-	file: z
-		.instanceof(File, { message: 'Video is required' })
-		.refine((file) => VALID_MIME_TYPES.includes(file.type), {
-			message: 'Invalid video format'
-		})
-		.refine((file) => file.size <= MAX_FILE_SIZE, {
-			message: 'Video must be smaller than 2MB'
-		})
-});
+		instruction: z
+			.array(
+				z.object({
+					text: z
+						.string()
+						.min(1, { message: 'Add at least one instruction to the exercise' })
+				})
+			)
+			.min(1, { message: 'At least one instruction is required' }),
 
-export type ExerciseFormData = z.infer<typeof exerciseFormSchema>;
+		file: mode === 'create' ? fileSchema : fileSchema.optional()
+	});
+
+export type ExerciseFormData = z.infer<
+	ReturnType<typeof getExerciseFormSchema>
+>;

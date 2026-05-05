@@ -28,7 +28,7 @@ export const ExerciseInputInstructions = ({
 	const errorsMessage = error?.message || error?.root?.message;
 
 	return (
-		<div className="flex flex-col gap-4 max-h-[30vh] scrollbar-custom pr-2">
+		<div className="flex flex-col gap-4 max-h-[40vh] scrollbar-custom pr-2">
 			<div className="flex flex-row justify-between gap-2">
 				<span>
 					Instructions <span className="text-secondary">*</span>
