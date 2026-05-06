@@ -13,7 +13,6 @@ export interface RoutineStoreState {
 	toggleExercise: (exercise: RoutineExercise) => void;
 	clearRoutine: () => void;
 	hasExercises: () => boolean;
-	isSelected: (id: string) => boolean;
 }
 
 export const useRoutineStore = create<RoutineStoreState>((set, get) => ({
@@ -49,7 +48,5 @@ export const useRoutineStore = create<RoutineStoreState>((set, get) => ({
 			selectedExercises: []
 		}),
 
-	hasExercises: () => get().exercises.length > 0,
-
-	isSelected: (id) => get().selectedExercises.some((e) => e.id === id)
+	hasExercises: () => get().exercises.length > 0
 }));

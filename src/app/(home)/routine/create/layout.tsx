@@ -1,19 +1,16 @@
 import React from 'react';
 import { ExerciseView } from '@/components/views';
 
-export default function ExerciseLayout({
+export default function RoutineCreateLayout({
 	children
 }: {
 	children: React.ReactNode;
 }) {
 	return (
 		<div className="flex flex-col lg:flex-row gap-4">
-			<div className="flex flex-col gap-4 w-full">
-				<h2 className="text-2xl font-semibold">Exercise</h2>
-				{children}
-			</div>
+			<div className=" w-full">{children}</div>
 			<div className="w-full max-w-full lg:max-w-80">
-				<ExerciseView mode="view" />
+				<ExerciseView mode="select" />
 			</div>
 		</div>
 	);

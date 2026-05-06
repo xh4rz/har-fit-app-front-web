@@ -8,13 +8,20 @@ import { getEquipments } from '@/modules/exercise/services/equipment';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { DefaultSelect, Dialog, ExerciseItem } from '@/components/molecules';
+import { DefaultSelect, Dialog } from '@/components/molecules';
 import { Separator } from '@/components/ui/separator';
-import { ExerciseForm } from '@/components/organism';
+import { ExerciseForm, ExerciseList } from '@/components/organism';
 import { cn } from '@/lib/utils';
 import { PlusIcon } from '@phosphor-icons/react';
+import { useRouter } from 'next/navigation';
 
-export const ExerciseView = () => {
+interface ExerciseViewProps {
+	mode?: 'view' | 'select';
+}
+
+export const ExerciseView = ({ mode = 'view' }: ExerciseViewProps) => {
+	const router = useRouter();
+
 	const [showModalCreateExercise, setShowModalCreateExercise] = useState(false);
 
 	const {
@@ -37,6 +44,10 @@ export const ExerciseView = () => {
 		queryFn: getEquipments,
 		enabled: !isPendingExercises
 	});
+
+	const handleClickExercise = (id: string) => {
+		router.push(`/exercise/${id}`);
+	};
 
 	if (isPendingExercises) {
 		return (
@@ -93,13 +104,12 @@ export const ExerciseView = () => {
 				<div>
 					<Separator />
 				</div>
-				<div className="scrollbar-custom">
-					{dataExercises?.map((exercise) => (
-						<div className="mr-2" key={exercise.id}>
-							<ExerciseItem exercise={exercise} />
-						</div>
-					))}
-				</div>
+
+				<ExerciseList
+					dataExercises={dataExercises}
+					onSelectExercise={handleClickExercise}
+					mode={mode}
+				/>
 			</div>
 
 			<Dialog
