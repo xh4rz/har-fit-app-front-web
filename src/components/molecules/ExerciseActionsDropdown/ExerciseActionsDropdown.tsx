@@ -6,7 +6,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { DotsThreeVerticalIcon } from '@phosphor-icons/react';
+import { DotsThreeVerticalIcon } from '@phosphor-icons/react/ssr';
 
 interface ExerciseActionsDropdownProps {
 	onEdit: () => void;

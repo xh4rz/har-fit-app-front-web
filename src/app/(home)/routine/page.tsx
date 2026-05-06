@@ -11,7 +11,7 @@ import {
 	BarbellIcon,
 	CaretRightIcon,
 	FilePlusIcon
-} from '@phosphor-icons/react/dist/ssr';
+} from '@phosphor-icons/react/ssr';
 
 export default function RoutinePage() {
 	return (

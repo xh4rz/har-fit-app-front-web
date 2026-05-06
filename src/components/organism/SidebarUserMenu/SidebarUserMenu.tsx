@@ -1,5 +1,3 @@
-'use client';
-
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
 	DropdownMenu,
@@ -20,7 +18,7 @@ import {
 	GearIcon,
 	SignOutIcon,
 	UserCircleDashedIcon
-} from '@phosphor-icons/react';
+} from '@phosphor-icons/react/ssr';
 import { getInitials } from '@/utils';
 import { User } from '@/infrastructure/interfaces';
 

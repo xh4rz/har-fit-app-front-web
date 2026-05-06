@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/item';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { CheckIcon, PlusIcon } from '@phosphor-icons/react/dist/ssr';
+import { CheckIcon, PlusIcon } from '@phosphor-icons/react/ssr';
 import { getCloudinaryThumbnail } from '@/utils';
 import { cn } from '@/lib/utils';
 import { Exercise } from '@/infrastructure/interfaces';

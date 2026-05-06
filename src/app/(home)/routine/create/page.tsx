@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { ArrowLeftIcon, BarbellIcon } from '@phosphor-icons/react/dist/ssr';
+import { ArrowLeftIcon, BarbellIcon } from '@phosphor-icons/react/ssr';
 
 export default function RoutineCreatePage() {
 	return (
