@@ -2,22 +2,26 @@
 
 import { useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { FieldValues, useFieldArray, useForm } from 'react-hook-form';
-import { useRoutineStore } from '@/modules/routine/store/useRoutineStore';
-import { ExerciseRoutineItem, FormInput } from '@/components/molecules';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useRoutineStore } from '@/modules/routine/store/useRoutineStore';
 import {
 	RoutineFormInput,
 	RoutineFormOutput,
 	routineFormSchema
 } from '@/modules/routine/validation/routineFormSchema';
 import { patchRoutineById, postRoutine } from '@/modules/routine/services';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
+import { ExerciseRoutineItem, FormInput } from '@/components/molecules';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ApiError, RoutineResponse } from '@/infrastructure/interfaces';
-import { ArrowLeftIcon, BarbellIcon } from '@phosphor-icons/react';
+import {
+	ArrowLeftIcon,
+	BarbellIcon,
+	FloppyDiskIcon
+} from '@phosphor-icons/react';
 import { setFormError } from '@/utils';
 
 interface RoutineFormProps {
@@ -168,9 +172,10 @@ export const RoutineForm = ({ mode, routine }: RoutineFormProps) => {
 				</Link>
 				<h2 className="text-2xl font-semibold flex-1">Create Routine</h2>
 				<Button
-					loading={loading}
 					size="lg"
+					loading={loading}
 					variant="secondary"
+					iconLeft={<FloppyDiskIcon />}
 					onClick={handleSubmit(onSaveRoutine)}
 				>
 					{mode === 'create' ? 'Save' : 'Update'} Routine

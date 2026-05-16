@@ -14,3 +14,4 @@ export * from './FormVideoUpload';
 export * from './ExerciseActionsDropdown';
 export * from './ExerciseRoutineItem';
 export * from './ExerciseRoutineInputSets';
+export * from './RoutineItem';

@@ -320,7 +320,7 @@ export const ExerciseForm = ({
 					onClick={nextStep}
 					disabled={loading}
 					loading={loading}
-					iconRight={isLastStep ? <FloppyDiskIcon /> : <CaretRightIcon />}
+					iconRight={!isLastStep ? <FloppyDiskIcon /> : <CaretRightIcon />}
 				>
 					{isLastStep ? (mode === 'create' ? 'Save' : 'Update') : 'Next'}
 				</Button>
