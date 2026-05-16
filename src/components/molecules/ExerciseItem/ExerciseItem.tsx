@@ -31,7 +31,7 @@ export const ExerciseItem = ({
 	const Content = (
 		<>
 			<ItemMedia>
-				<Avatar className="size-11">
+				<Avatar className="size-12">
 					<AvatarImage src={thumbnail} alt="image url" />
 					{/* // todo: agregar imagen de exercise si no existe */}
 					<AvatarFallback>EX</AvatarFallback>
@@ -40,7 +40,7 @@ export const ExerciseItem = ({
 			<ItemContent className="gap-0">
 				<ItemTitle className="text-xs">{exercise.title}</ItemTitle>
 				<ItemDescription className="text-xs text-foreground/50">
-					{exercise.primaryMuscle.name}s
+					{exercise.primaryMuscle.name}
 				</ItemDescription>
 			</ItemContent>
 

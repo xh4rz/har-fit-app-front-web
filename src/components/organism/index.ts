@@ -5,3 +5,4 @@ export * from './ExerciseDetail';
 export * from './ExerciseForm';
 export * from './DeleteAlertDialog';
 export * from './ExerciseList';
+export * from './RoutineForm';

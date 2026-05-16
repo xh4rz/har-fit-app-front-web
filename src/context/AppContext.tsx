@@ -30,7 +30,6 @@ export function AppContextProvider({ children }: AppContextProps) {
 		};
 
 		initAuth();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return <ReactQueryContextProvider>{children}</ReactQueryContextProvider>;
