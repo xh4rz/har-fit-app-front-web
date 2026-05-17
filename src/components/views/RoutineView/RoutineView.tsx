@@ -75,20 +75,18 @@ export const RoutineView = () => {
 			</div>
 		);
 	}
+
 	return (
 		<div className="flex flex-col lg:flex-row gap-4">
-			<Card
-				className="lg:flex-2 min-h-96 rounded-lg p-4 flex flex-col justify-center 
-					items-center text-center gap-2"
-			>
-				{dataRoutines ? (
+			<Card className="lg:flex-2 min-h-96 rounded-lg p-4 flex flex-col">
+				{dataRoutines?.length !== 0 ? (
 					<div className="w-full space-y-4">
 						<div className="flex items-center justify-between text-muted-foreground">
 							<h3 className="text-sm font-bold">My Routines</h3>
 							<span className="text-sm ">{dataRoutines?.length}</span>
 						</div>
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full items-stretch">
-							{dataRoutines.map((routine) => (
+							{dataRoutines?.map((routine) => (
 								<RoutineItem
 									key={routine.id}
 									routine={routine}
@@ -101,13 +99,13 @@ export const RoutineView = () => {
 						</div>
 					</div>
 				) : (
-					<>
+					<div className="flex-1 flex flex-col gap-2 justify-center items-center">
 						<BarbellIcon size={48} className="text-muted-foreground mb-4" />
 						<h5 className="text-lg font-medium">Get started</h5>
 						<span className="text-muted-foreground">
 							Start by creating a routine!
 						</span>
-					</>
+					</div>
 				)}
 			</Card>
 			<Card className="lg:flex-1 h-20 rounded-lg p-4 flex justify-center items-center text-center gap-2">

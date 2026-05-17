@@ -42,33 +42,21 @@ export const RoutineForm = ({ mode, routine }: RoutineFormProps) => {
 
 	const clearRoutine = useRoutineStore((state) => state.clearRoutine);
 
-	const getDefaultValues = (): RoutineFormOutput => {
-		if (mode === 'edit' && routine) {
-			return {
-				title: routine.title,
-				exercises: routine.exercises.map((ex) => ({
-					exerciseId: ex.exerciseId,
-					sets: ex.sets
-				}))
-			};
-		}
-		return {
-			title: '',
-			exercises: []
-		};
-	};
-
 	const {
 		control,
 		handleSubmit,
+		getValues,
 		setError,
 		clearErrors,
-		resetField,
+		reset,
 		formState: { errors }
 	} = useForm<RoutineFormInput, FieldValues, RoutineFormOutput>({
 		resolver: zodResolver(routineFormSchema),
 		mode: 'onSubmit',
-		defaultValues: getDefaultValues()
+		defaultValues: {
+			title: '',
+			exercises: []
+		}
 	});
 
 	const { fields, replace } = useFieldArray({
@@ -113,13 +101,17 @@ export const RoutineForm = ({ mode, routine }: RoutineFormProps) => {
 
 	useEffect(() => {
 		if (selectedExercises.length === 0) {
-			resetField('exercises');
-			clearErrors();
+			replace([]);
+			clearErrors('exercises');
 			return;
 		}
 
+		const currentExercises = getValues('exercises');
+
 		const formExercises = selectedExercises.map((exercise) => {
-			const existing = fields.find((f) => f.exerciseId === exercise.id);
+			const existing = currentExercises.find(
+				(f) => f.exerciseId === exercise.id
+			);
 
 			return {
 				exerciseId: exercise.id,
@@ -145,15 +137,17 @@ export const RoutineForm = ({ mode, routine }: RoutineFormProps) => {
 		}
 	}, []);
 
-	// useFocusEffect(() => {
-	// 	const { selectedExercises, exercises } = useRoutineStore.getState();
-
-	// 	if (selectedExercises.length !== exercises.length) {
-	// 		useRoutineStore.setState({
-	// 			selectedExercises: exercises
-	// 		});
-	// 	}
-	// });
+	useEffect(() => {
+		if (mode === 'edit' && routine) {
+			reset({
+				title: routine.title,
+				exercises: routine.exercises.map((ex) => ({
+					exerciseId: ex.exerciseId,
+					sets: ex.sets
+				}))
+			});
+		}
+	}, [routine]);
 
 	useEffect(() => {
 		return () => {
@@ -170,7 +164,9 @@ export const RoutineForm = ({ mode, routine }: RoutineFormProps) => {
 				>
 					<ArrowLeftIcon />
 				</Link>
-				<h2 className="text-2xl font-semibold flex-1">Create Routine</h2>
+				<h2 className="text-2xl font-semibold flex-1">
+					{mode === 'create' ? 'Create' : 'Edit'} Routine
+				</h2>
 				<Button
 					size="lg"
 					loading={loading}

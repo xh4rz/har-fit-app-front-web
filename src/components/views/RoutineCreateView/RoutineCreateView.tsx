@@ -1,7 +1,5 @@
-// import { RoutineForm } from '@/components/organisms';
+import { RoutineForm } from '@/components/organism';
 
 export const RoutineCreateView = () => {
-	// return <RoutineForm mode="create" />;
-
-	return <div>sss</div>;
+	return <RoutineForm mode="create" />;
 };

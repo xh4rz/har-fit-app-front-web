@@ -1,7 +1,6 @@
-import React from 'react';
 import { ExerciseView } from '@/components/views';
 
-export default function RoutineCreateLayout({
+export default function RoutineLayout({
 	children
 }: {
 	children: React.ReactNode;
