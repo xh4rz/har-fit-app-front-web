@@ -1,3 +1,6 @@
+'use client';
+
+import { ComponentProps } from 'react';
 import { Button } from '@/components/ui/button';
 import {
 	DropdownMenu,
@@ -6,26 +9,31 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
+import { DotsThreeIcon } from '@phosphor-icons/react';
 import { DotsThreeVerticalIcon } from '@phosphor-icons/react/ssr';
 
 interface ExerciseActionsDropdownProps {
 	onEdit: () => void;
 	onDelete: () => void;
+	vertical?: boolean;
+	size?: ComponentProps<typeof Button>['size'];
 }
 
-export const ExerciseActionsDropdown = ({
+export const ActionsDropdown = ({
 	onEdit,
-	onDelete
+	onDelete,
+	vertical = false,
+	size = 'icon-xs'
 }: ExerciseActionsDropdownProps) => {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button
-					variant="ghost"
-					className="flex size-8  text-foreground data-[state=open]:bg-muted"
-					size="icon"
-				>
-					<DotsThreeVerticalIcon className="size-6" />
+				<Button variant="ghost" className="" size={size}>
+					{vertical ? (
+						<DotsThreeVerticalIcon className="size-6 text-primary" />
+					) : (
+						<DotsThreeIcon className="size-6 text-primary" />
+					)}
 					<span className="sr-only">Open menu</span>
 				</Button>
 			</DropdownMenuTrigger>

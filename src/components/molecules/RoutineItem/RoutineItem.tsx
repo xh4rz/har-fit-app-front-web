@@ -1,8 +1,8 @@
 'use client';
 
-import { DotsThreeIcon } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { ActionsDropdown } from '../ActionsDropdown';
 
 interface RoutineItemProps {
 	routine: {
@@ -12,10 +12,15 @@ interface RoutineItemProps {
 			title: string;
 		}[];
 	};
-	onOpenOptions: (id: string) => void;
+	onEdit: () => void;
+	onDelete: () => void;
 }
 
-export const RoutineItem = ({ routine, onOpenOptions }: RoutineItemProps) => {
+export const RoutineItem = ({
+	routine,
+	onEdit,
+	onDelete
+}: RoutineItemProps) => {
 	return (
 		<Card className="rounded-lg bg-accent p-4 h-36">
 			<div className="flex flex-col h-full">
@@ -23,13 +28,7 @@ export const RoutineItem = ({ routine, onOpenOptions }: RoutineItemProps) => {
 					<h3 className="font-bold text-foreground truncate">
 						{routine.title}
 					</h3>
-					<Button
-						onClick={() => onOpenOptions(routine.id)}
-						size="icon-xs"
-						variant="outline"
-					>
-						<DotsThreeIcon className="size-6 text-primary" />
-					</Button>
+					<ActionsDropdown onEdit={onEdit} onDelete={onDelete} />
 				</div>
 				<p className="text-sm text-muted-foreground text-start mb-4 line-clamp-2">
 					{routine.exercises.map((e) => e.title).join(', ')}

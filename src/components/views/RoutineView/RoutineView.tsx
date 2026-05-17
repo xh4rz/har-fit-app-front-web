@@ -20,6 +20,7 @@ import {
 	CaretRightIcon,
 	FilePlusIcon
 } from '@phosphor-icons/react';
+import { DeleteAlertDialog } from '@/components/organism';
 
 export const RoutineView = () => {
 	const router = useRouter();
@@ -28,7 +29,7 @@ export const RoutineView = () => {
 
 	const [selectedRoutineId, setSelectedRoutineId] = useState<string>('');
 
-	const [showModalOptions, setShowModalOptions] = useState(false);
+	const [selectedRoutineTitle, setSelectedRoutineTitle] = useState<string>('');
 
 	const [showModalDeleteRoutine, setShowModalDeleteRoutine] = useState(false);
 
@@ -37,26 +38,26 @@ export const RoutineView = () => {
 		queryFn: () => getRoutines()
 	});
 
-	// const handleEditRoutine = () => {
-	// router.push({
-	// 	pathname: '/routine/edit/[id]',
-	// 	params: { id: selectedRoutineId }
-	// });
-	// };
+	const handleEditRoutine = (id: string) => {
+		router.push(`/routine/edit/${id}`);
+	};
 
-	// const handleDeleteRoutine = () => {
-	// 	setShowModalDeleteRoutine(true);
-	// };
+	const handleDeleteRoutine = (id: string, title: string) => {
+		setSelectedRoutineId(id);
+		setSelectedRoutineTitle(title);
+		setShowModalDeleteRoutine(true);
+	};
 
-	// const { mutate: deleteExercise, isPending: loadingDelete } = useMutation({
-	// 	mutationFn: () => deleteRoutineById(selectedRoutineId),
-	// 	onSuccess: async () => {
-	// 		await queryClient.invalidateQueries({
-	// 			queryKey: ['routines']
-	// 		});
-	// 		setShowModalDeleteRoutine(false);
-	// 	}
-	// });
+	const { mutate: deleteExercise, isPending: isPendingDeleteRoutine } =
+		useMutation({
+			mutationFn: () => deleteRoutineById(selectedRoutineId),
+			onSuccess: async () => {
+				await queryClient.invalidateQueries({
+					queryKey: ['routines']
+				});
+				setShowModalDeleteRoutine(false);
+			}
+		});
 
 	if (isPendingRoutines) {
 		return (
@@ -87,14 +88,14 @@ export const RoutineView = () => {
 							<span className="text-sm ">{dataRoutines?.length}</span>
 						</div>
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full items-stretch">
-							{dataRoutines.map((i) => (
+							{dataRoutines.map((routine) => (
 								<RoutineItem
-									key={i.id}
-									routine={i}
-									onOpenOptions={(id) => {
-										setSelectedRoutineId(id);
-										setShowModalOptions(true);
-									}}
+									key={routine.id}
+									routine={routine}
+									onEdit={() => handleEditRoutine(routine.id)}
+									onDelete={() =>
+										handleDeleteRoutine(routine.id, routine.title)
+									}
 								/>
 							))}
 						</div>
@@ -124,6 +125,15 @@ export const RoutineView = () => {
 					</Link>
 				</Item>
 			</Card>
+
+			<DeleteAlertDialog
+				title={`Delete '${selectedRoutineTitle}' Routine`}
+				description="Are you sure you want to delete this routine?"
+				open={showModalDeleteRoutine}
+				loading={isPendingDeleteRoutine}
+				onOpenChange={setShowModalDeleteRoutine}
+				onDelete={deleteExercise}
+			/>
 		</div>
 	);
 };

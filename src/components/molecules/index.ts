@@ -11,7 +11,7 @@ export * from './Dialog';
 export * from './FormMultipleCombobox';
 export * from './ExerciseInputInstructions';
 export * from './FormVideoUpload';
-export * from './ExerciseActionsDropdown';
+export * from './ActionsDropdown';
 export * from './ExerciseRoutineItem';
 export * from './ExerciseRoutineInputSets';
 export * from './RoutineItem';

@@ -1,7 +1,7 @@
 'use client';
 
 import {
-	ExerciseActionsDropdown,
+	ActionsDropdown,
 	ExerciseInfo,
 	ExerciseInstructions,
 	Tabs
@@ -47,7 +47,12 @@ export const ExerciseDetail = ({
 		<div className="flex flex-col gap-4">
 			<Card className="h-full sm:min-h-96 sm:h-96 rounded-lg p-4">
 				<div>
-					<ExerciseActionsDropdown onEdit={onEdit} onDelete={onDelete} />
+					<ActionsDropdown
+						onEdit={onEdit}
+						onDelete={onDelete}
+						vertical
+						size="icon"
+					/>
 				</div>
 				<div className="flex flex-col sm:flex-row h-full gap-4">
 					<div className="flex-1 flex justify-center items-center">
