@@ -15,3 +15,4 @@ export * from './ActionsDropdown';
 export * from './ExerciseRoutineItem';
 export * from './ExerciseRoutineInputSets';
 export * from './RoutineItem';
+export * from './HomeItem';

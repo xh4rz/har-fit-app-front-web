@@ -5,3 +5,4 @@ export * from './ExerciseDetailView';
 export * from './RoutineView';
 export * from './RoutineCreateView';
 export * from './RoutineEditView';
+export * from './HomeView';

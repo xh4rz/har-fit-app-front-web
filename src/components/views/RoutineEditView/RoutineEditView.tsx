@@ -30,7 +30,7 @@ export const RoutineEditView = () => {
 	if (isErrorRoutine) {
 		return (
 			<Card className="rounded-lg p-4 h-[calc(100vh-3rem)] flex justify-center items-center text-center">
-				<span>An error occurred while loading the exercises.</span>
+				<span>An error occurred while loading the routines.</span>
 			</Card>
 		);
 	}

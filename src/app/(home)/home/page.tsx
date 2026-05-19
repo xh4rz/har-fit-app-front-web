@@ -1,5 +1,10 @@
-import { Card } from '@/components/ui/card';
+import { HomeView } from '@/components/views';
 
 export default function HomePage() {
-	return <Card className="p-5">HomePage</Card>;
+	return (
+		<div className="flex flex-col gap-4 h-full">
+			<h2 className="text-2xl font-semibold">Home</h2>
+			<HomeView />
+		</div>
+	);
 }
