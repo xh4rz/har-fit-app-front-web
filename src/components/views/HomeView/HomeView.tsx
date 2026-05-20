@@ -11,6 +11,7 @@ import {
 	UserIcon
 } from '@phosphor-icons/react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { AppQRCode } from '@/components/atoms';
 
 export const HomeView = () => {
 	const { user } = useAuthStore((state) => state);
@@ -38,25 +39,32 @@ export const HomeView = () => {
 							To take full advantage of Hevy complete the following steps:
 						</p>
 					</div>
-
 					<div className="w-full">
 						<Image
 							loading="eager"
 							src="/images/banner-har-fit.png"
 							alt="home banner"
-							width={600}
-							height={600}
-							className="w-full h-auto object-contain"
+							width={500}
+							height={500}
+							className="w-lg "
 							priority
 						/>
 					</div>
 				</div>
 			</div>
 			<div className="px-4 sm:px-8 lg:px-12 py-8 flex flex-col gap-4">
-				<HomeItem
-					icon={<DownloadSimpleIcon size={30} className="text-primary" />}
-					title="Download the HarFit mobile app"
-				/>
+				<div className="flex gap-20">
+					<HomeItem
+						icon={<DownloadSimpleIcon size={30} className="text-primary" />}
+						title="Download the HarFit mobile app"
+					/>
+
+					<AppQRCode
+						value="https://github.com/xh4rz/har-fit-app-front-mobile/releases/tag/v1.0.0"
+						size={100}
+					/>
+				</div>
+
 				<Separator />
 				<HomeItem
 					icon={<UserIcon size={30} className="text-primary" />}
