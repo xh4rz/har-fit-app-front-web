@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { RoutineExercise } from '../types/exerciseRoutine';
+import { RoutineExercise } from '@/types';
 
 export interface RoutineStoreState {
 	title: string;

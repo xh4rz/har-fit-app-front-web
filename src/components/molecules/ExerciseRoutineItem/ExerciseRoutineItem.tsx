@@ -2,7 +2,7 @@
 
 import { Control, FieldErrors } from 'react-hook-form';
 import { RoutineFormInput } from '@/modules/routine/validation/routineFormSchema';
-import { RoutineExercise } from '@/modules/routine/types/exerciseRoutine';
+import { RoutineExercise } from '@/types';
 import {
 	Item,
 	ItemContent,
