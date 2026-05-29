@@ -9,7 +9,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { CheckIcon, PlusIcon } from '@phosphor-icons/react/ssr';
-import { getCloudinaryThumbnail } from '@/utils';
+import { getCloudinaryThumbnail, getInitials } from '@/utils';
 import { cn } from '@/lib/utils';
 import { Exercise } from '@/infrastructure/interfaces';
 
@@ -33,8 +33,7 @@ export const ExerciseItem = ({
 			<ItemMedia>
 				<Avatar className="size-12">
 					<AvatarImage src={thumbnail} alt="image url" />
-					{/* // todo: agregar imagen de exercise si no existe */}
-					<AvatarFallback>EX</AvatarFallback>
+					<AvatarFallback>{getInitials(exercise.title)}</AvatarFallback>
 				</Avatar>
 			</ItemMedia>
 			<ItemContent className="gap-0">
