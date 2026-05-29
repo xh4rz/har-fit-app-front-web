@@ -32,6 +32,14 @@ export const ExerciseList = ({
 		}
 	};
 
+	if (dataExercises?.length === 0) {
+		return (
+			<p className="text-muted-foreground w-full text-center">
+				No exercise found. Try another search.
+			</p>
+		);
+	}
+
 	return (
 		<div className="scrollbar-custom">
 			{dataExercises?.map((exercise) => (

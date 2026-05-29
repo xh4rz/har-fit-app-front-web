@@ -18,15 +18,19 @@ type FormSelectProps<T extends BaseSelectItem> = {
 	placeHolder: string;
 	data?: T[];
 	loading: boolean;
+	value?: string;
+	onValueChange?: (value: string) => void;
 };
 
 export const DefaultSelect = <T extends BaseSelectItem>({
 	placeHolder,
 	data,
-	loading
+	loading,
+	value,
+	onValueChange
 }: FormSelectProps<T>) => {
 	return (
-		<Select>
+		<Select value={value} onValueChange={onValueChange}>
 			<SelectTrigger className="w-full" disabled={loading}>
 				{loading ? (
 					<div className="w-full flex items-center justify-center">

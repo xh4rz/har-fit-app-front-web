@@ -7,7 +7,7 @@ import { BarbellIcon } from '@phosphor-icons/react';
 
 export default function ExercisePage() {
 	const { isPending: isPendingExercises } = useQuery({
-		queryKey: ['exercises'],
+		queryKey: ['exercises', '', ''],
 		queryFn: () => {},
 		enabled: false
 	});

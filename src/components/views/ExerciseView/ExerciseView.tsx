@@ -24,13 +24,22 @@ export const ExerciseView = ({ mode = 'view' }: ExerciseViewProps) => {
 
 	const [showModalCreateExercise, setShowModalCreateExercise] = useState(false);
 
+	const [primaryMuscleId, setPrimaryMuscleId] = useState('');
+
+	const [equipmentId, setEquipmentId] = useState('');
+
 	const {
 		data: dataExercises,
 		isPending: isPendingExercises,
 		isError: isErrorExercises
 	} = useQuery({
-		queryKey: ['exercises'],
-		queryFn: getExercises
+		queryKey: ['exercises', primaryMuscleId, equipmentId],
+		queryFn: () =>
+			getExercises({
+				primaryMuscleId: Number(primaryMuscleId) || undefined,
+				equipmentId: Number(equipmentId) || undefined
+			}),
+		placeholderData: (previousData) => previousData
 	});
 
 	const { data: dataMuscles, isPending: isPendingMuscles } = useQuery({
@@ -92,6 +101,8 @@ export const ExerciseView = ({ mode = 'view' }: ExerciseViewProps) => {
 						placeHolder="Select Muscle"
 						data={dataMuscles}
 						loading={isPendingMuscles}
+						value={primaryMuscleId}
+						onValueChange={setPrimaryMuscleId}
 					/>
 				</div>
 				<div>
@@ -99,6 +110,8 @@ export const ExerciseView = ({ mode = 'view' }: ExerciseViewProps) => {
 						placeHolder="Select Equipment"
 						data={dataEquipments}
 						loading={isPendingEquipments}
+						value={equipmentId}
+						onValueChange={setEquipmentId}
 					/>
 				</div>
 				<div>
