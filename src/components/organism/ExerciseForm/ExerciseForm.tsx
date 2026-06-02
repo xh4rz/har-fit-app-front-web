@@ -243,7 +243,7 @@ export const ExerciseForm = ({
 							label="Equipment"
 							placeholder="Select Equipment"
 							loading={isPendingEquipments}
-							data={dataEquipments}
+							data={dataEquipments?.slice(1)}
 						/>
 
 						<FormSelect
@@ -254,7 +254,7 @@ export const ExerciseForm = ({
 							label="Primary Muscle"
 							placeholder="Select Primary Muscle"
 							loading={isPendingMuscles}
-							data={dataMuscles}
+							data={dataMuscles?.slice(1)}
 						/>
 
 						<FormMultipleCombobox
@@ -264,7 +264,7 @@ export const ExerciseForm = ({
 							label="Secondary Muscles"
 							placeholder="Search Other Muscles"
 							loading={isPendingMuscles}
-							data={dataMuscles}
+							data={dataMuscles?.slice(1)}
 						/>
 					</>
 				) : step === 1 ? (
