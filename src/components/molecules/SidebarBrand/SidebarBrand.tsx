@@ -18,7 +18,7 @@ export const SidebarBrand = ({ open }: SidebarBrandProps) => {
 					height={40}
 				/>
 			) : (
-				<AppLogo />
+				<AppLogo className="text-2xl" />
 			)}
 		</div>
 	);

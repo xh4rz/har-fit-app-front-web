@@ -15,6 +15,7 @@ import { FormInput } from '@/components/molecules';
 import { SignInIcon } from '@phosphor-icons/react';
 import { setFormError } from '@/utils';
 import { ApiError } from '@/infrastructure/interfaces';
+import { AppLogo } from '@/components/atoms';
 
 type LoginFormData = z.infer<typeof loginFormSchema>;
 
@@ -61,7 +62,7 @@ export const LoginView = () => {
 				<div className="flex flex-col p-4">
 					<CardHeader className="flex items-center justify-center h-28">
 						<CardTitle className="text-4xl font-bold text-primary">
-							HarFit<span className="text-secondary">App</span>
+							<AppLogo />
 						</CardTitle>
 					</CardHeader>
 					<CardContent className="p-0 mb-4">

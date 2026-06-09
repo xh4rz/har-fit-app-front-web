@@ -36,20 +36,18 @@ export const HomeView = () => {
 							Hello <span className="text-secondary">{user.fullName}</span>,
 							welcome to HarFit!
 						</h3>
-
 						<p className="text-lg text-muted-foreground leading-6">
 							To take full advantage of Hevy complete the following steps:
 						</p>
 					</div>
 					<div className="w-full">
 						<Image
-							priority
-							loading="eager"
+							preload
 							src="/images/banner-har-fit.png"
 							alt="home banner"
 							width={500}
 							height={500}
-							className="w-lg "
+							className="w-lg"
 						/>
 					</div>
 				</div>
@@ -73,7 +71,7 @@ export const HomeView = () => {
 						>
 							<Image
 								fill
-								priority
+								preload
 								src="/images/badge-google-play-store.svg"
 								alt="Get it on Google Play"
 								className="object-contain transition-transform hover:scale-105"
@@ -86,7 +84,7 @@ export const HomeView = () => {
 						>
 							<Image
 								fill
-								priority
+								preload
 								src="/images/badge-app-store.svg"
 								alt="Download on the App Store"
 								className="object-contain transition-transform hover:scale-105"
