@@ -11,7 +11,7 @@ import { loginFormSchema } from '@/modules/auth/validation/loginFormSchema';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Field, FieldGroup } from '@/components/ui/field';
-import { FormInput } from '@/components/molecules';
+import { FormInput, FormInputPassword } from '@/components/molecules';
 import { SignInIcon } from '@phosphor-icons/react';
 import { setFormError } from '@/utils';
 import { ApiError } from '@/infrastructure/interfaces';
@@ -66,9 +66,10 @@ export const LoginView = () => {
 						</CardTitle>
 					</CardHeader>
 					<CardContent className="p-0 mb-4">
-						<form id="form-login" onSubmit={handleSubmit(onSubmit)}>
+						<form id="form-login" onSubmit={handleSubmit(onSubmit)} noValidate>
 							<FieldGroup>
 								<FormInput
+									autoFocus
 									required
 									disabled={loading}
 									control={control}
@@ -78,7 +79,7 @@ export const LoginView = () => {
 									type="email"
 									autoComplete="email webauthn"
 								/>
-								<FormInput
+								<FormInputPassword
 									required
 									disabled={loading}
 									control={control}

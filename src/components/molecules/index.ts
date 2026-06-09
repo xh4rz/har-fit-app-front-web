@@ -1,5 +1,6 @@
 export * from './DefaultSelect';
 export * from './FormInput';
+export * from './FormInputPassword';
 export * from './FormSelect';
 export * from './SidebarBrand';
 export * from './SidebarMenuItemLink';
