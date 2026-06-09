@@ -120,14 +120,15 @@ export const LoginView = () => {
 				</div>
 				<div className="relative hidden md:flex">
 					<Image
-						priority
 						fill
+						preload
 						src="/images/gym-weights.avif"
 						alt="gym-weights"
+						sizes="(max-width: 768px) 100vw, 50vw"
 						className="object-cover"
 					/>
 					<div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/10 to-transparent" />
-					<div className="relative z-10 flex flex-col justify-end p-10">
+					<div className="absolute inset-0 z-10 flex flex-col justify-end p-10">
 						<h2 className="text-3xl font-bold text-white">
 							The Change Is Today
 						</h2>

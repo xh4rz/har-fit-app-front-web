@@ -64,16 +64,17 @@ export const SignupView = () => {
 	return (
 		<Card className="overflow-hidden p-0">
 			<div className="grid md:grid-cols-2">
-				<div className="relative hidden md:flex">
+				<div className="relative hidden md:flex h-full">
 					<Image
-						priority
 						fill
+						preload
 						src="/images/gym-men.jpg"
 						alt="gym-men"
+						sizes="(max-width: 768px) 100vw, 50vw"
 						className="object-cover"
 					/>
 					<div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/10 to-transparent" />
-					<div className="relative z-10 flex flex-col justify-end p-10">
+					<div className="absolute inset-0 z-10 flex flex-col justify-end p-10">
 						<h2 className="text-3xl font-bold text-white">
 							Your Transformation Starts Here
 						</h2>
