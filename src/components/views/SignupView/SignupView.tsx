@@ -1,25 +1,28 @@
 'use client';
 
+import { useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useAuthStore } from '@/modules/auth/store/useAuthStore';
 import {
-	passwordValidationRules,
+	passwordRequirements,
+	passwordStrengthColor,
+	passwordStrengthText,
 	signupFormSchema
 } from '@/modules/auth/validation/signupFormSchema';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Field, FieldGroup } from '@/components/ui/field';
-import { FormInput } from '@/components/molecules';
-import { CheckCircleIcon, SignInIcon } from '@phosphor-icons/react';
-import { setFormError } from '@/utils';
-import { Separator } from '@/components/ui/separator';
+import { FormInput, FormInputPassword } from '@/components/molecules';
+import { CheckIcon, SignInIcon, XIcon } from '@phosphor-icons/react';
 import { ApiError } from '@/infrastructure/interfaces';
 import { AppLogo } from '@/components/atoms';
+import { setFormError } from '@/utils';
+import { cn } from '@/lib/utils';
 
 type SignupFormData = z.infer<typeof signupFormSchema>;
 
@@ -32,7 +35,6 @@ export const SignupView = () => {
 		control,
 		handleSubmit,
 		setError,
-		watch,
 		formState: { errors }
 	} = useForm<SignupFormData>({
 		resolver: zodResolver(signupFormSchema),
@@ -45,12 +47,20 @@ export const SignupView = () => {
 		}
 	});
 
-	const password = watch('password') || '';
+	const password = useWatch({
+		control,
+		name: 'password',
+		defaultValue: ''
+	});
 
-	const rules = passwordValidationRules.map((rule) => ({
-		label: rule.label,
-		valid: rule.test(password)
+	const passwordChecks = passwordRequirements.map((i) => ({
+		isValid: i.regex.test(password),
+		description: i.text
 	}));
+
+	const passwordStrengthScore = useMemo(() => {
+		return passwordChecks.filter((i) => i.isValid).length;
+	}, [passwordChecks]);
 
 	const onSubmit = async (data: SignupFormData) => {
 		try {
@@ -115,7 +125,8 @@ export const SignupView = () => {
 									type="email"
 									autoComplete="email webauthn"
 								/>
-								<FormInput
+
+								<FormInputPassword
 									required
 									disabled={loading}
 									control={control}
@@ -125,7 +136,8 @@ export const SignupView = () => {
 									type="password"
 									autoComplete="new-password webauthn"
 								/>
-								<FormInput
+
+								<FormInputPassword
 									required
 									disabled={loading}
 									control={control}
@@ -137,23 +149,45 @@ export const SignupView = () => {
 								/>
 							</FieldGroup>
 						</form>
-						<div className="my-6">
-							<Separator />
+						<div className="w-full max-w-xs space-y-2 mt-6">
+							<div className="mb-4 flex h-1 w-full gap-1">
+								{Array.from({ length: 5 }).map((_, index) => (
+									<span
+										key={index}
+										className={cn(
+											'h-full flex-1 rounded-full transition-all duration-500 ease-out',
+											index < passwordStrengthScore
+												? passwordStrengthColor(passwordStrengthScore)
+												: 'bg-border'
+										)}
+									/>
+								))}
+							</div>
+							<p className="text-foreground text-sm font-medium">
+								{passwordStrengthText(passwordStrengthScore)}. Must contain:
+							</p>
+							<ul className="mb-4 space-y-1.5">
+								{passwordChecks.map((i, index) => (
+									<li key={index} className="flex items-center gap-2">
+										{i.isValid ? (
+											<CheckIcon className="size-4 text-green-600 dark:text-green-400" />
+										) : (
+											<XIcon className="text-muted-foreground size-4" />
+										)}
+										<span
+											className={cn(
+												'text-xs',
+												i.isValid
+													? 'text-green-600 dark:text-green-400'
+													: 'text-muted-foreground'
+											)}
+										>
+											{i.description}
+										</span>
+									</li>
+								))}
+							</ul>
 						</div>
-						<div className="flex flex-col">
-							<span className="mb-2">Password requirements: </span>
-							{rules.map((rule, index) => (
-								<div
-									key={index}
-									className={`flex gap-1 items-center text-[13px] mb-0.5 ${
-										rule.valid ? 'text-green-500' : 'text-gray-400'
-									}`}
-								>
-									<CheckCircleIcon size={18} /> {rule.label}
-								</div>
-							))}
-						</div>
-
 						{errors.root && (
 							<div className="mt-5">
 								<span className="text-destructive">{errors.root.message}</span>
