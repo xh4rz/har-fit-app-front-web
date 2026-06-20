@@ -51,17 +51,17 @@ export const SidebarUserMenu = ({
 								<Avatar className="h-8 w-8 rounded-lg">
 									<AvatarImage
 										src="https://avatars.githubusercontent.com/u/70307905?v=4&size=64"
-										alt={user?.fullName ?? 'avatar image'}
+										alt={user?.fullname ?? 'avatar image'}
 									/>
 									<AvatarFallback className="rounded-full">
-										{getInitials(user?.fullName ?? '')}
+										{getInitials(user?.fullname ?? '')}
 									</AvatarFallback>
 								</Avatar>
 
 								{open && (
 									<>
 										<div className="grid flex-1 text-left text-sm leading-tight">
-											<span className="truncate">{user?.fullName}</span>
+											<span className="truncate">{user?.fullname}</span>
 											<span className="truncate text-xs text-muted-foreground">
 												{user?.email}
 											</span>
