@@ -18,7 +18,7 @@ import { URLS } from '@/lib/constants/urls';
 export const HomeView = () => {
 	const { user } = useAuthStore((state) => state);
 
-	if (!user?.fullName) {
+	if (!user?.fullname) {
 		return (
 			<Card className="p-4 h-full flex flex-col gap-4">
 				<Skeleton className="flex-1/6 w-full " />
@@ -33,7 +33,7 @@ export const HomeView = () => {
 				<div className="flex flex-col lg:flex-row items-center justify-center gap-8">
 					<div className="flex flex-col gap-4 w-full max-w-xl text-center lg:text-left">
 						<h3 className="text-2xl font-bold leading-tight">
-							Hello <span className="text-secondary">{user.fullName}</span>,
+							Hello <span className="text-secondary">{user.fullname}</span>,
 							welcome to HarFit!
 						</h3>
 						<p className="text-lg text-muted-foreground leading-6">
