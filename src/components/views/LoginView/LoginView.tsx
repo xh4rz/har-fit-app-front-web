@@ -40,7 +40,7 @@ export const LoginView = () => {
 
 	const onSubmit = async (data: LoginFormData) => {
 		try {
-			await login(data.email, data.password);
+			await login(data);
 			router.replace('/home');
 		} catch (error) {
 			const errorObj = error as ApiError;

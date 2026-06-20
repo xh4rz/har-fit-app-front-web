@@ -1,5 +1,15 @@
 import { User } from '..';
 
-export interface Auth {
+export interface AuthLoginRequest {
+	email: string;
+	password: string;
+}
+export interface AuthRegisterRequest {
+	username: string;
+	fullname: string;
+	email: string;
+	password: string;
+}
+export interface AuthResponse {
 	user: User;
 }

@@ -40,7 +40,8 @@ export const SignupView = () => {
 		resolver: zodResolver(signupFormSchema),
 		mode: 'onChange',
 		defaultValues: {
-			fullName: '',
+			username: '',
+			fullname: '',
 			email: '',
 			password: '',
 			confirmPassword: ''
@@ -64,7 +65,7 @@ export const SignupView = () => {
 
 	const onSubmit = async (data: SignupFormData) => {
 		try {
-			await register(data.fullName, data.email, data.password);
+			await register(data);
 			router.replace('/home');
 		} catch (error) {
 			const errorObj = error as ApiError;
@@ -109,7 +110,17 @@ export const SignupView = () => {
 									required
 									disabled={loading}
 									control={control}
-									name="fullName"
+									name="username"
+									label="Username"
+									placeholder="Enter your Username"
+									type="text"
+									autoComplete="username webauthn"
+								/>
+								<FormInput
+									required
+									disabled={loading}
+									control={control}
+									name="fullname"
 									label="Full Name"
 									placeholder="Enter your Full Name"
 									type="text"
