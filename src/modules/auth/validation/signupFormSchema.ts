@@ -30,7 +30,16 @@ export const passwordRequirements = [
 
 export const signupFormSchema = z
 	.object({
-		fullName: z
+		username: z
+			.string()
+			.min(1, 'Username is required')
+			.min(3, 'Username must be at least 3 characters')
+			.max(20, 'Username can have a maximum of 20 characters')
+			.regex(
+				/^[a-zA-Z][a-zA-Z0-9_]*$/,
+				'Username must begin with a letter and may contain numbers or underscores (_)'
+			),
+		fullname: z
 			.string()
 			.min(1, 'Full Name is required')
 			.min(10, 'Full Name must be at least 10 characters')
