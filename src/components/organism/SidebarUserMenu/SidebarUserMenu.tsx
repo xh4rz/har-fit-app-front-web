@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
 	DropdownMenu,
@@ -16,8 +17,7 @@ import {
 import {
 	DotsThreeVerticalIcon,
 	GearIcon,
-	SignOutIcon,
-	UserCircleDashedIcon
+	SignOutIcon
 } from '@phosphor-icons/react/ssr';
 import { getInitials } from '@/utils';
 import { User } from '@/infrastructure/interfaces';
@@ -78,14 +78,12 @@ export const SidebarUserMenu = ({
 							sideOffset={4}
 						>
 							<DropdownMenuGroup>
-								<DropdownMenuItem>
-									<UserCircleDashedIcon />
-									Profile
-								</DropdownMenuItem>
-								<DropdownMenuItem>
-									<GearIcon />
-									Settings
-								</DropdownMenuItem>
+								<Link href="/settings/profile" passHref>
+									<DropdownMenuItem>
+										<GearIcon />
+										Settings
+									</DropdownMenuItem>
+								</Link>
 							</DropdownMenuGroup>
 							<DropdownMenuSeparator />
 							<DropdownMenuItem variant="destructive" onClick={onLogout}>

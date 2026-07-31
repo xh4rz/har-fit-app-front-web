@@ -8,7 +8,7 @@ import {
 	SidebarHeader,
 	useSidebar
 } from '@/components/ui/sidebar';
-import { BarbellIcon, HouseIcon, UserIcon } from '@phosphor-icons/react';
+import { BarbellIcon, FolderPlusIcon, HouseIcon } from '@phosphor-icons/react';
 import { useAuthStore } from '@/modules/auth/store/useAuthStore';
 import { SidebarNavigation, SidebarUserMenu } from '@/components/organism';
 import { SidebarBrand } from '@/components/molecules';
@@ -28,13 +28,7 @@ const menuItems: MenuItem[] = [
 	{
 		name: 'Routine',
 		url: '/routine',
-		icon: BarbellIcon
-	},
-
-	{
-		name: 'Profile',
-		url: '/profile',
-		icon: UserIcon
+		icon: FolderPlusIcon
 	}
 ];
 

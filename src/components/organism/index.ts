@@ -6,3 +6,5 @@ export * from './ExerciseForm';
 export * from './DeleteAlertDialog';
 export * from './ExerciseList';
 export * from './RoutineForm';
+export * from './SettingsSidebar';
+export * from './SidebarNavigationGroups';
