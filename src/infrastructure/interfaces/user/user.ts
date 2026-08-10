@@ -1,3 +1,5 @@
+import { Gender } from './gender';
+
 export interface User {
 	id: string;
 	email: string;
@@ -5,4 +7,8 @@ export interface User {
 	username: string;
 	isActive: boolean;
 	roles: string[];
+	description?: string | null;
+	gender?: Gender | null;
+	birthDate?: string | null;
+	imageUrl?: string | null;
 }

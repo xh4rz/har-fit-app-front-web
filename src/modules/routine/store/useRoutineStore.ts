@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { devtools } from 'zustand/middleware';
 import { RoutineExercise } from '@/types';
 
 export interface RoutineStoreState {
@@ -11,25 +12,31 @@ export interface RoutineStoreState {
 	hasSelectedExercises: () => boolean;
 }
 
-export const useRoutineStore = create<RoutineStoreState>((set, get) => ({
-	title: '',
-	selectedExercises: [],
-	setTitle: (title) => set({ title }),
-	setSelectedExercises: (exercises) => set({ selectedExercises: exercises }),
-	toggleExercise: (item) =>
-		set((state) => {
-			const exists = state.selectedExercises.some((e) => e.id === item.id);
-
-			return {
-				selectedExercises: exists
-					? state.selectedExercises.filter((e) => e.id !== item.id)
-					: [...state.selectedExercises, item]
-			};
-		}),
-	clearRoutine: () =>
-		set({
+export const useRoutineStore = create<RoutineStoreState>()(
+	devtools(
+		(set, get) => ({
 			title: '',
-			selectedExercises: []
+			selectedExercises: [],
+			setTitle: (title) => set({ title }),
+			setSelectedExercises: (exercises) =>
+				set({ selectedExercises: exercises }),
+			toggleExercise: (item) =>
+				set((state) => {
+					const exists = state.selectedExercises.some((e) => e.id === item.id);
+
+					return {
+						selectedExercises: exists
+							? state.selectedExercises.filter((e) => e.id !== item.id)
+							: [...state.selectedExercises, item]
+					};
+				}),
+			clearRoutine: () =>
+				set({
+					title: '',
+					selectedExercises: []
+				}),
+			hasSelectedExercises: () => get().selectedExercises.length > 0
 		}),
-	hasSelectedExercises: () => get().selectedExercises.length > 0
-}));
+		{ store: 'useRoutineStore' }
+	)
+);

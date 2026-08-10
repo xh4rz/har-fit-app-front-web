@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -19,8 +18,8 @@ import {
 	GearIcon,
 	SignOutIcon
 } from '@phosphor-icons/react/ssr';
-import { getInitials } from '@/utils';
 import { User } from '@/infrastructure/interfaces';
+import { UserAvatar } from '@/components/molecules';
 
 interface SidebarUserMenuProps {
 	loading: boolean;
@@ -48,16 +47,7 @@ export const SidebarUserMenu = ({
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
 							<SidebarMenuButton className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
-								<Avatar className="h-8 w-8 rounded-lg">
-									<AvatarImage
-										src="https://avatars.githubusercontent.com/u/70307905?v=4&size=64"
-										alt={user?.fullname ?? 'avatar image'}
-									/>
-									<AvatarFallback className="rounded-full">
-										{getInitials(user?.fullname ?? '')}
-									</AvatarFallback>
-								</Avatar>
-
+								<UserAvatar src={user?.imageUrl || ''} name={user?.fullname} />
 								{open && (
 									<>
 										<div className="grid flex-1 text-left text-sm leading-tight">

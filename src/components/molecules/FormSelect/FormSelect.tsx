@@ -15,7 +15,7 @@ import { Field, FieldLabel, FieldError } from '@/components/ui/field';
 type BaseSelectItem = {
 	id: number;
 	name: string;
-	imageUrl: string;
+	imageUrl?: string;
 };
 
 type FormSelectProps<T extends BaseSelectItem, F extends FieldValues> = {

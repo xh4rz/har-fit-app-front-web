@@ -17,3 +17,5 @@ export * from './ExerciseRoutineItem';
 export * from './ExerciseRoutineInputSets';
 export * from './RoutineItem';
 export * from './HomeItem';
+export * from './UserAvatar';
+export * from './FormTextarea';

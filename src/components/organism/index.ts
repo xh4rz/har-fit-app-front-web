@@ -8,3 +8,4 @@ export * from './ExerciseList';
 export * from './RoutineForm';
 export * from './SettingsSidebar';
 export * from './SidebarNavigationGroups';
+export * from './ProfileForm';

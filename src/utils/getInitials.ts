@@ -1,5 +1,5 @@
-export const getInitials = (nombre: string): string => {
-	return nombre
+export const getInitials = (value: string): string => {
+	return value
 		.trim()
 		.split(' ')
 		.filter(Boolean)

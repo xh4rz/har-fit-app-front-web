@@ -74,7 +74,6 @@ export const ExerciseForm = ({
 		handleSubmit,
 		formState: { errors },
 		setError,
-
 		trigger
 	} = useForm<ExerciseFormData>({
 		resolver: zodResolver(getExerciseFormSchema(mode)),
