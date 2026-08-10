@@ -1,5 +1,9 @@
-import { Card } from '@/components/ui/card';
+import { ProfileView } from '@/components/views';
 
 export default function SettingsProfilePage() {
-	return <Card className="p-5">ProfilePage</Card>;
+	return (
+		<div className="p-5">
+			<ProfileView />
+		</div>
+	);
 }

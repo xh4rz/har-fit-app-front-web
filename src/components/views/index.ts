@@ -6,3 +6,4 @@ export * from './RoutineView';
 export * from './RoutineCreateView';
 export * from './RoutineEditView';
 export * from './HomeView';
+export * from './ProfileView';

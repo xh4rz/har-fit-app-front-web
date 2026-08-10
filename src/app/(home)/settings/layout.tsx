@@ -7,7 +7,7 @@ export default function SettingsLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<div className="flex flex-col lg:flex-row gap-4 max-w-6xl mx-auto w-full">
+		<div className="flex flex-col lg:flex-row gap-4 max-w-4xl mx-auto w-full">
 			<Card className="p-5 w-full flex flex-row">
 				<div>
 					<SettingsSidebar />
