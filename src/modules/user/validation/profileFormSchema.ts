@@ -44,8 +44,7 @@ export const profileFormSchema = z.object({
 		.string()
 		.max(300, 'Description can have a maximum of 300 characters')
 		.optional(),
-	// gender: z.enum(Gender).optional(),
-	gender: z.number().int().min(1).max(3),
+	gender: z.number().int().min(1).max(3).optional(),
 	birthDate: z.date().optional()
 });
 

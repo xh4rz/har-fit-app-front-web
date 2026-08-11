@@ -52,7 +52,11 @@ export const FormSelect = <T extends BaseSelectItem, F extends FieldValues>({
 					</FieldLabel>
 					<Select
 						{...selectProps}
-						value={field.value === 0 ? '' : String(field.value)}
+						value={
+							field.value === 0 || field.value === undefined
+								? ''
+								: String(field.value)
+						}
 						onValueChange={(value) => field.onChange(value ? Number(value) : 0)}
 						disabled={loading || selectProps.disabled}
 					>

@@ -8,12 +8,12 @@ import {
 	profileFormSchema
 } from '@/modules/user/validation/profileFormSchema';
 import { useAuthStore } from '@/modules/auth/store/useAuthStore';
-
 import {
 	FormInput,
 	FormSelect,
 	FormTextarea,
-	UserAvatar
+	UserAvatar,
+	FormDatePicker
 } from '@/components/molecules';
 import { Button } from '@/components/ui/button';
 import { FieldGroup } from '@/components/ui/field';
@@ -139,6 +139,23 @@ export const ProfileForm = () => {
 						type="email"
 						autoComplete="email"
 					/>
+					<div className="flex gap-2">
+						<FormSelect
+							disabled={loading}
+							control={control}
+							name="gender"
+							label="Gender"
+							placeholder="Select Gender"
+							loading={false}
+							data={genderSelectData}
+						/>
+						<FormDatePicker
+							disabled={loading}
+							control={control}
+							name="birthDate"
+							label="Birth Date"
+						/>
+					</div>
 					<FormTextarea
 						disabled={loading}
 						control={control}
@@ -146,15 +163,6 @@ export const ProfileForm = () => {
 						label="Description"
 						placeholder="Enter Description..."
 						className="resize-none min-h-20"
-					/>
-					<FormSelect
-						disabled={loading}
-						control={control}
-						name="gender"
-						label="Gender"
-						placeholder="Select Equipment"
-						loading={false}
-						data={genderSelectData}
 					/>
 				</FieldGroup>
 			</div>
