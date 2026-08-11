@@ -19,3 +19,4 @@ export * from './RoutineItem';
 export * from './HomeItem';
 export * from './UserAvatar';
 export * from './FormTextarea';
+export * from './FormDatePicker';
