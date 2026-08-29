@@ -3,7 +3,7 @@
 import { ReactNode, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { ReactQueryContextProvider } from './ReactQueryContext';
-import { getUserProfile } from '@/modules/user/service';
+import { getUser } from '@/modules/user/service';
 import { useAuthStore } from '@/modules/auth/store/useAuthStore';
 import { routeUtils } from '@/lib/routes';
 
@@ -21,7 +21,7 @@ export function AppContextProvider({ children }: AppContextProps) {
 			useAuthStore.setState({ loading: true });
 
 			try {
-				const user = await getUserProfile();
+				const user = await getUser();
 
 				useAuthStore.setState({ isAuthenticated: true, user });
 			} finally {

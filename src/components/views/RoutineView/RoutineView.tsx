@@ -48,7 +48,7 @@ export const RoutineView = () => {
 		setShowModalDeleteRoutine(true);
 	};
 
-	const { mutate: deleteExercise, isPending: isPendingDeleteRoutine } =
+	const { mutate: deleteRoutine, isPending: isPendingDeleteRoutine } =
 		useMutation({
 			mutationFn: () => deleteRoutineById(selectedRoutineId),
 			onSuccess: async () => {
@@ -130,7 +130,7 @@ export const RoutineView = () => {
 				open={showModalDeleteRoutine}
 				loading={isPendingDeleteRoutine}
 				onOpenChange={setShowModalDeleteRoutine}
-				onDelete={deleteExercise}
+				onDelete={deleteRoutine}
 			/>
 		</div>
 	);
