@@ -1,13 +1,19 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
+	imageSchema,
 	ProfileFormData,
 	profileFormSchema
 } from '@/modules/user/validation/profileFormSchema';
 import { useAuthStore } from '@/modules/auth/store/useAuthStore';
+import {
+	deleteUserImage,
+	patchUserById,
+	patchUserImage
+} from '@/modules/user/service';
 import {
 	FormInput,
 	FormSelect,
@@ -17,17 +23,11 @@ import {
 } from '@/components/molecules';
 import { Button } from '@/components/ui/button';
 import { FieldGroup } from '@/components/ui/field';
-import { FloppyDiskIcon } from '@phosphor-icons/react';
-
-// const userData: ProfileFormData = {
-// 	username: user?.username ?? '',
-// 	fullname: user?.fullname ?? '',
-// 	email: user?.email ?? '',
-// 	file: undefined,
-// 	description: user?.description ?? undefined,
-// 	gender: user?.gender ?? undefined,
-// 	birthDate: user?.birthDate ? new Date(user.birthDate) : undefined
-// };
+import { ImageEditor } from '../ImageEditor';
+import { parse } from 'date-fns';
+import { formatDate, setFormError } from '@/utils';
+import { FloppyDiskIcon, PencilSimpleIcon } from '@phosphor-icons/react';
+import { ApiError } from '@/infrastructure/interfaces';
 
 const genderSelectData: { id: number; name: string }[] = [
 	{ id: 1, name: 'Male' },
@@ -36,7 +36,13 @@ const genderSelectData: { id: number; name: string }[] = [
 ];
 
 export const ProfileForm = () => {
-	const { user, loading } = useAuthStore((state) => state);
+	const { user, setUser } = useAuthStore((state) => state);
+	const fileInputRef = useRef<HTMLInputElement>(null);
+	const [editorOpen, setEditorOpen] = useState(false);
+	const [selectedImage, setSelectedImage] = useState<string | null>(null);
+	const [imageError, setImageError] = useState<string | null>(null);
+	const [loading, setLoading] = useState(false);
+	const hasSavedImage = !!user?.imageUrl;
 
 	const {
 		control,
@@ -51,24 +57,105 @@ export const ProfileForm = () => {
 			username: '',
 			fullname: '',
 			email: '',
-			file: undefined,
 			description: undefined,
 			gender: undefined,
 			birthDate: undefined
 		}
 	});
 
-	// if (!user?.imageUrl) {
-	// 	return (
-	// 		<Card className="p-4 h-full flex flex-col gap-4">
-	// 			<Skeleton className="flex-1 w-full" />
-	// 		</Card>
-	// 	);
-	// }
+	const onSaveProfile = async (data: ProfileFormData) => {
+		setLoading(true);
 
-	const onSaveProfile = (data: ProfileFormData) => {
-		console.log(data);
-		// saveRoutine(data);
+		if (!user) return;
+
+		const dataUser = {
+			...data,
+			birthDate: data.birthDate ? formatDate(data.birthDate) : null
+		};
+
+		try {
+			const updatedUser = await patchUserById(user?.id, dataUser);
+			setUser(updatedUser);
+		} catch (error) {
+			const errorObj = error as ApiError;
+			setFormError(setError, errorObj);
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	const handleEditorOpenChange = (open: boolean) => {
+		setEditorOpen(open);
+		if (!open) {
+			setSelectedImage(null);
+		}
+	};
+
+	const handleImageSelected = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const file = event.target.files?.[0];
+
+		if (!file) return;
+
+		const result = imageSchema.safeParse(file);
+
+		if (!result.success) {
+			setImageError(result.error.issues[0].message);
+			event.target.value = '';
+			return;
+		}
+
+		setImageError(null);
+		const imageUrl = URL.createObjectURL(file);
+		setSelectedImage(imageUrl);
+		setEditorOpen(true);
+		event.target.value = '';
+	};
+
+	const handleOpenImageEditor = () => {
+		const image = selectedImage ?? user?.imageUrl;
+		if (image) {
+			setSelectedImage(image);
+			setEditorOpen(true);
+			return;
+		}
+		handleReplaceImage();
+		setImageError(null);
+	};
+
+	const handleReplaceImage = () => {
+		setEditorOpen(false);
+		fileInputRef.current?.click();
+	};
+
+	const handleSaveImage = async (file: File) => {
+		try {
+			const formData = new FormData();
+			formData.append('file', file);
+			const updatedUser = await patchUserImage(formData);
+			const newImageUrl = updatedUser.imageUrl!;
+			setUser({
+				...user!,
+				imageUrl: newImageUrl
+			});
+			setSelectedImage(null);
+			setEditorOpen(false);
+		} catch (error) {
+			console.error('Error saving image', error);
+		}
+	};
+
+	const handleDeleteImage = async () => {
+		try {
+			await deleteUserImage();
+			setUser({
+				...user!,
+				imageUrl: null
+			});
+			setSelectedImage(null);
+			setEditorOpen(false);
+		} catch (error) {
+			console.error('Error deleting user image', error);
+		}
 	};
 
 	useEffect(() => {
@@ -78,10 +165,11 @@ export const ProfileForm = () => {
 			username: user.username ?? '',
 			fullname: user.fullname ?? '',
 			email: user.email ?? '',
-			file: undefined,
 			description: user.description ?? undefined,
 			gender: user.gender ?? undefined,
-			birthDate: user.birthDate ? new Date(user.birthDate) : undefined
+			birthDate: user.birthDate
+				? parse(user.birthDate, 'yyyy-MM-dd', new Date())
+				: undefined
 		});
 	}, [user]);
 
@@ -91,20 +179,61 @@ export const ProfileForm = () => {
 				<h2 className="text-2xl font-semibold flex-1">Profile</h2>
 				<Button
 					size="lg"
-					loading={loading}
+					disabled={loading}
 					variant="secondary"
 					iconLeft={<FloppyDiskIcon />}
 					onClick={handleSubmit(onSaveProfile)}
 				>
-					Update Profile
+					Save Profile
 				</Button>
 			</div>
 			<div>
-				<UserAvatar
-					src={user?.imageUrl || ''}
-					name={user?.fullname}
-					className="w-25 h-25"
-				/>
+				<div className="flex items-center gap-4">
+					<UserAvatar
+						src={user?.imageUrl ?? ''}
+						name={user?.fullname}
+						className="w-25 h-25"
+					/>
+
+					<input
+						ref={fileInputRef}
+						type="file"
+						accept="image/jpeg,image/png,image/webp"
+						className="hidden"
+						onChange={handleImageSelected}
+					/>
+
+					<Button
+						size="sm"
+						variant="outline"
+						iconLeft={<PencilSimpleIcon />}
+						onClick={handleOpenImageEditor}
+					>
+						Edit Image
+					</Button>
+				</div>
+
+				<div className="mt-2">
+					{imageError && (
+						<p className="text-sm text-destructive">{imageError}</p>
+					)}
+
+					{errors.root && (
+						<p className="text-sm text-destructive ">{errors.root.message}</p>
+					)}
+				</div>
+
+				{selectedImage && (
+					<ImageEditor
+						open={editorOpen}
+						image={selectedImage}
+						hasSavedImage={hasSavedImage}
+						onOpenChange={handleEditorOpenChange}
+						onSave={handleSaveImage}
+						onDelete={handleDeleteImage}
+						onReplace={handleReplaceImage}
+					/>
+				)}
 			</div>
 
 			<div>

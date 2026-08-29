@@ -9,3 +9,4 @@ export * from './RoutineForm';
 export * from './SettingsSidebar';
 export * from './SidebarNavigationGroups';
 export * from './ProfileForm';
+export * from './ImageEditor';

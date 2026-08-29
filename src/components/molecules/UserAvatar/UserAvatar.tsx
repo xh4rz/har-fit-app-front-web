@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import { getInitials } from '@/utils';
 
 interface UserAvatarProps {
-	src: string;
+	src?: string | Blob | undefined;
 	name?: string;
 	className?: string;
 }
@@ -12,7 +12,7 @@ interface UserAvatarProps {
 export const UserAvatar = ({ src, name, className = '' }: UserAvatarProps) => {
 	return (
 		<Avatar className={cn('h-8 w-8 rounded-lg', className)}>
-			<AvatarImage src={src} alt={name ?? 'user image'} />
+			<AvatarImage src={src ? src : undefined} alt={name ?? 'user image'} />
 			<AvatarFallback className="rounded-full">
 				{getInitials(name ?? '')}
 			</AvatarFallback>

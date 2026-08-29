@@ -5,3 +5,5 @@ export * from './normalizeError';
 export * from './getInitials';
 export * from './getCloudinaryThumbnail';
 export * from './capitalize';
+export * from './getCroppedImage';
+export * from './formatDate';

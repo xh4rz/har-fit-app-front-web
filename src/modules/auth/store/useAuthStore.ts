@@ -18,6 +18,7 @@ export interface AuthStoreState {
 	login: (data: AuthLoginRequest) => Promise<void>;
 	register: (data: AuthRegisterRequest) => Promise<void>;
 	logout: () => Promise<void>;
+	setUser: (user: User) => void;
 }
 
 export const useAuthStore = create<AuthStoreState>()(
@@ -48,11 +49,11 @@ export const useAuthStore = create<AuthStoreState>()(
 					set({ loading: false });
 				}
 			},
-
 			logout: async () => {
 				await authLogout();
 				set({ isAuthenticated: false, user: null });
-			}
+			},
+			setUser: (user) => set({ user })
 		}),
 		{ store: 'useAuthStore' }
 	)

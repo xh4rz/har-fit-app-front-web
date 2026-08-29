@@ -9,7 +9,7 @@ const VALID_IMAGE_TYPES = [
 	'image/webp'
 ];
 
-const imageSchema = z
+export const imageSchema = z
 	.instanceof(File)
 	.optional()
 	.refine((file) => !file || VALID_IMAGE_TYPES.includes(file.type), {
@@ -20,7 +20,7 @@ const imageSchema = z
 	});
 
 export const profileFormSchema = z.object({
-	file: imageSchema,
+	// file: imageSchema,
 	username: z
 		.string()
 		.min(1, 'Username is required')
