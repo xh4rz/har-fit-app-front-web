@@ -45,6 +45,8 @@ Para facilitar la evaluación de la aplicación, puedes utilizar las siguientes 
 
 > ⚠️ Estas credenciales están destinadas únicamente a fines de demostración y evaluación del proyecto.
 
+> ⚠️ Importante: El primer login o registro puede tardar entre 3–5 minutos mientras el servidor de Render se inicia. Después, funcionará con normalidad.
+
 ---
 
 ## 🛠️ Tech Stack
