@@ -180,6 +180,7 @@ export const ProfileForm = () => {
 				<Button
 					size="lg"
 					disabled={loading}
+					loading={loading}
 					variant="secondary"
 					iconLeft={<FloppyDiskIcon />}
 					onClick={handleSubmit(onSaveProfile)}

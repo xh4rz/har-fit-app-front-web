@@ -20,3 +20,4 @@ export * from './HomeItem';
 export * from './UserAvatar';
 export * from './FormTextarea';
 export * from './FormDatePicker';
+export * from './ProfileSkeleton';
