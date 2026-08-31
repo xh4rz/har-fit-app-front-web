@@ -32,7 +32,10 @@ export const SettingsSidebar = () => {
 	const pathname = usePathname();
 
 	return (
-		<Sidebar className="border-r" collapsible="none">
+		<Sidebar
+			className="w-full border-b md:w-56 md:border-r md:border-b-0"
+			collapsible="none"
+		>
 			<SidebarContent className="py-6">
 				<SidebarNavigationGroups
 					groups={menuGroups}
