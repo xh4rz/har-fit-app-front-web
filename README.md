@@ -21,387 +21,33 @@
 
 # 🏋️ HarFit Web
 
-HarFit Web es la plataforma web de HarFit para gestionar entrenamientos, rutinas y progreso físico.
+**HarFit Web** es una plataforma diseñada para gestionar entrenamientos, rutinas y el progreso físico de los usuarios.
 
 La aplicación permite:
 
-- Crear y administrar rutinas
-- Registrar ejercicios y series
-- Monitorear progreso
-- Gestionar autenticación y perfil
+- Crear y administrar rutinas de entrenamiento.
+- Registrar ejercicios y series.
+- Gestionar el perfil de usuario.
+- Monitorear el progreso físico.
 
-La idea y experiencia general del producto está inspirada en **Hevy**, tomando como referencia su enfoque de seguimiento de entrenamientos y experiencia de usuario, adaptándolo a la arquitectura y necesidades propias de HarFit.
-
----
-
-# 📐 Arquitectura
-
-La aplicación está construida con:
-
-- **Next.js 15**
-- **React 19**
-- **TypeScript**
-
-La arquitectura combina:
-
-- **Atomic Design**
-- **Feature/Module Architecture**
-- **App Router**
-- Separación de responsabilidades
-- UI desacoplada de la lógica de negocio
-
-El objetivo principal es mantener una base de código:
-
-- Escalable
-- Mantenible
-- Modular
-- Reutilizable
+La experiencia general del producto está inspirada en **Hevy**, tomando como referencia su enfoque de seguimiento de entrenamientos y experiencia de usuario, mientras se implementa una arquitectura y lógica propias para HarFit.
 
 ---
 
-# 📂 Estructura del Proyecto
+## 🔐 Demo Access
 
-```bash
-src/
- ├── api/               # Configuración API
- │
- ├── app/               # App Router
- │
- ├── components/        # UI Components reutilizables
- │   ├── atoms/
- │   ├── molecules/
- │   ├── organisms/
- │   ├── ui/
- │   └── views/
- │
- ├── context/           # Context Providers
- │
- ├── hooks/             # Custom Hooks globales
- │
- ├── infrastructure/    # Configuración técnica e interfaces
- │
- ├── lib/               # Helpers compartidos
- │
- ├── modules/           # Features del dominio
- │
- ├── types/             # Types globales
- │
- ├── utils/             # Utilities
- │
- └── proxy.ts
-```
+Para facilitar la evaluación de la aplicación, puedes utilizar las siguientes credenciales de demostración:
+
+| Rol              | Email              | Contraseña |
+| ---------------- | ------------------ | ---------- |
+| 👑 Administrador | `harold@gmail.com` | `-Abc123`  |
+| 👤 Usuario       | `olga@gmail.com`   | `-Abc123`  |
+
+> ⚠️ Estas credenciales están destinadas únicamente a fines de demostración y evaluación del proyecto.
 
 ---
 
-# 🎨 UI — Atomic Design
-
-La UI está organizada siguiendo Atomic Design.
-
-## Atoms
-
-Componentes básicos y reutilizables.
-
-Los atoms:
-
-- No contienen lógica de negocio
-- Son altamente reutilizables
-- Son independientes del dominio
-
----
-
-## Molecules
-
-Composición de múltiples atoms.
-
-Las molecules:
-
-- Combinan atoms
-- Mantienen responsabilidad única
-- Siguen siendo reutilizables
-- Representan funcionalidades visuales pequeñas
-
----
-
-## Organisms
-
-Componentes complejos compuestos por molecules y atoms.
-
-Los organisms:
-
-- Representan secciones completas de UI
-- Pueden contener lógica visual
-- No deben contener lógica de negocio compleja
-
----
-
-## Views
-
-Pantallas completas o composiciones de página.
-
-Las views:
-
-- Orquestan organisms
-- Representan la UI final
-- Consumen hooks y módulos
-
----
-
-# 🧠 Arquitectura Modular
-
-Cada feature vive dentro de su propio módulo.
-
-```bash
-modules/
-```
-
-Cada módulo encapsula:
-
-- Lógica de negocio
-- Estado
-- Servicios
-- Validaciones
-- Tipos específicos
-
----
-
-# 📦 Diferencia entre Components y Modules
-
-## components/
-
-Contiene UI reutilizable y desacoplada del dominio.
-
-Reglas:
-
-- No contiene lógica de negocio
-- No depende de modules/
-- Puede reutilizarse en cualquier feature
-
----
-
-## modules/
-
-Contiene lógica específica del dominio o feature.
-
-Reglas:
-
-- Encapsula comportamiento del negocio
-- Puede consumir components/
-- No debe depender de app/
-
----
-
-# 🏛 Principios de Arquitectura
-
-La arquitectura sigue los siguientes principios:
-
-- Separación de responsabilidades
-- Bajo acoplamiento
-- Alta cohesión
-- Modularidad
-- Reutilización
-- Escalabilidad
-- Mantenibilidad
-
----
-
-# 🔄 Flujo de la Aplicación
-
-```txt
-Page / View
-    ↓
-Hook
-    ↓
-Service
-    ↓
-API
-    ↓
-Response
-    ↓
-UI
-```
-
----
-
-# 🧩 Responsabilidades por Carpeta
-
-## app/
-
-Responsable de:
-
-- Routing
-- Layouts
-- Server Components
-- Client Components
-- Orquestación de features
-
-No debe contener:
-
-- Lógica de negocio compleja
-- Estado global de dominio
-
----
-
-## components/
-
-Responsable de:
-
-- UI reutilizable
-- Diseño visual
-- Componentes desacoplados
-
-No debe contener:
-
-- Lógica de negocio
-- Fetching de datos
-
----
-
-## modules/
-
-Responsable de:
-
-- Features del dominio
-- Casos de uso
-- Estado de negocio
-- Validaciones
-- Servicios
-
-No debe contener:
-
-- UI global reutilizable
-
----
-
-## hooks/
-
-Responsable de:
-
-- Reutilización de lógica React
-- Hooks compartidos
-
----
-
-## infrastructure/
-
-Responsable de:
-
-- Configuración técnica
-- Contratos
-- API clients
-- Manejo de errores
-- Interfaces compartidas
-
----
-
-## lib/
-
-Responsable de:
-
-- Helpers reutilizables
-- Funciones compartidas
-- Configuraciones auxiliares
-
----
-
-## types/
-
-Responsable de:
-
-- Tipos globales
-- Contratos compartidos
-
----
-
-# 📦 State Management
-
-La aplicación utiliza:
-
-- **Zustand**
-- **TanStack React Query**
-
----
-
-## Zustand
-
-Usado para:
-
-- Estado global
-- Sesión de usuario
-- Estado persistente del cliente
-- UI State
-
----
-
-## React Query
-
-Usado para:
-
-- Server State
-- Fetching
-- Cache
-- Sincronización con backend
-- Invalidación automática
-
----
-
-# 📏 Reglas de Arquitectura
-
-## Dependencias
-
-```txt
-app → modules → infrastructure
-        ↓
-   components
-```
-
----
-
-## Reglas
-
-- `components/` NO depende de `modules/`
-- `modules/` NO depende de `app/`
-- `services/` NO contiene lógica UI
-- `hooks/` deben ser reutilizables
-- `types/` globales deben evitar duplicados
-- La UI debe permanecer desacoplada del negocio
-
----
-
-# 📱 App Router
-
-Ubicación:
-
-```txt
-src/app/
-```
-
-Responsabilidades:
-
-- Manejo de rutas
-- Layouts
-- Renderizado híbrido
-- Server Components
-- Client Components
-
----
-
-# 🧪 Validaciones
-
-La aplicación utiliza:
-
-- **Zod**
-- **React Hook Form**
-
-Beneficios:
-
-- Formularios tipados
-- Validación declarativa
-- Mejor DX
-- Integración con TypeScript
-
----
-
-# 🚀 Main Tech Stack
+## 🛠️ Tech Stack
 
 | Tecnología      | Uso                 |
 | --------------- | ------------------- |
@@ -418,17 +64,172 @@ Beneficios:
 
 ---
 
-# ⚙️ Getting Started
+# 📐 Arquitectura
 
-## 1. Instalar dependencias
+HarFit Web combina **Atomic Design** para la organización de la interfaz con una **arquitectura modular orientada a features**, buscando mantener una clara separación de responsabilidades entre la UI, la lógica de negocio y la infraestructura.
+
+La arquitectura está diseñada para mantener el proyecto:
+
+- Escalable.
+- Mantenible.
+- Modular.
+- Reutilizable.
+- Desacoplado.
+
+## 📂 Estructura del Proyecto
 
 ```bash
-npm install
+src/
+├── api/                # Configuración y clientes HTTP
+├── app/                # Next.js App Router
+│
+├── components/         # Componentes de UI reutilizables
+│   ├── atoms/
+│   ├── molecules/
+│   ├── organisms/
+│   ├── ui/
+│   └── views/
+│
+├── context/            # Context Providers
+├── hooks/              # Custom Hooks compartidos
+├── infrastructure/     # Configuración técnica e interfaces
+├── lib/                # Helpers y configuraciones compartidas
+├── modules/            # Features y lógica del dominio
+├── types/              # Tipos globales
+├── utils/              # Utilidades
+│
+└── proxy.ts
 ```
+
+## 🎨 Organización de la UI
+
+La interfaz sigue el enfoque de **Atomic Design**:
+
+- **Atoms:** Componentes básicos, independientes y altamente reutilizables.
+- **Molecules:** Composición de múltiples atoms para crear pequeñas funcionalidades visuales.
+- **Organisms:** Componentes más complejos que representan secciones completas de la interfaz.
+- **Views:** Composiciones de mayor nivel que representan pantallas o secciones principales.
+
+La UI se mantiene desacoplada de la lógica de negocio para facilitar su reutilización y mantenimiento.
+
+## 🧠 Arquitectura Modular
+
+Las funcionalidades del dominio se organizan dentro de `modules/`.
+
+Cada módulo puede encapsular responsabilidades relacionadas con una feature, como:
+
+- Lógica de negocio.
+- Estado.
+- Servicios.
+- Validaciones.
+- Tipos específicos.
+
+Esto permite que cada feature evolucione de forma más independiente y reduce el acoplamiento entre funcionalidades.
+
+## 📦 Responsabilidades y Dependencias
+
+```txt
+app
+ ↓
+modules
+ ↓
+infrastructure
+
+components
+ ↕
+UI reutilizable
+```
+
+Principales reglas de la arquitectura:
+
+- `components/` no depende de `modules/`.
+- `modules/` no depende de `app/`.
+- Los servicios no contienen lógica de UI.
+- La lógica de negocio permanece separada de los componentes visuales.
+- Los hooks compartidos deben ser reutilizables.
+- Los tipos globales deben evitar duplicaciones innecesarias.
+
+## 🔄 Flujo de la Aplicación
+
+```txt
+Page / View
+    ↓
+Hook
+    ↓
+Service
+    ↓
+API
+    ↓
+Response
+    ↓
+UI
+```
+
+Este flujo busca mantener una separación clara entre la interfaz, la lógica de la aplicación y la comunicación con el backend.
 
 ---
 
-## 2. Configurar variables de entorno
+# 📦 State Management
+
+La aplicación utiliza dos herramientas principales para el manejo del estado:
+
+- **Zustand**
+- **TanStack React Query**
+
+## Zustand
+
+Utilizado principalmente para:
+
+- Estado global.
+- Sesión del usuario.
+- Estado persistente del cliente.
+- Estado relacionado con la interfaz.
+
+## TanStack React Query
+
+Utilizado para:
+
+- Server State.
+- Fetching de datos.
+- Caché.
+- Sincronización con el backend.
+- Invalidación de datos.
+
+---
+
+# 🧪 Formularios y Validaciones
+
+La aplicación utiliza:
+
+- **React Hook Form**
+- **Zod**
+
+Beneficios:
+
+- Formularios tipados.
+- Validación declarativa.
+- Integración con TypeScript.
+- Mejor experiencia de desarrollo.
+- Separación entre la lógica de formularios y la interfaz.
+
+---
+
+# ⚙️ Getting Started
+
+## 1. Clonar el proyecto
+
+```bash
+git clone https://github.com/xh4rz/har-fit-app-front-web
+cd har-fit-app-front-web
+```
+
+## 2. Instalar dependencias
+
+```bash
+pnpm install
+```
+
+## 3. Configurar variables de entorno
 
 Crear un archivo `.env`:
 
@@ -436,12 +237,10 @@ Crear un archivo `.env`:
 NEXT_PUBLIC_API_URL=
 ```
 
----
-
-## 3. Iniciar servidor de desarrollo
+## 4. Iniciar el servidor de desarrollo
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 La aplicación estará disponible en:
@@ -452,20 +251,18 @@ http://localhost:3000
 
 ---
 
-# 📦 Production Build
+# 🚀 Production Build
 
 ## Build
 
 ```bash
-npm run build
+pnpm run build
 ```
-
----
 
 ## Start
 
 ```bash
-npm run start
+pnpm run start
 ```
 
 ---
@@ -473,18 +270,18 @@ npm run start
 # 🧪 Lint
 
 ```bash
-npm run lint
+pnpm run lint
 ```
 
 ---
 
-# 📄 Naming Conventions
+# 📏 Naming Conventions
 
 | Elemento   | Convención   |
 | ---------- | ------------ |
 | Components | PascalCase   |
 | Hooks      | useSomething |
-| Utils      | camelCase    |
+| Functions  | camelCase    |
 | Types      | PascalCase   |
 | Constants  | UPPER_CASE   |
 | Files      | kebab-case   |
@@ -493,79 +290,29 @@ npm run lint
 
 # 🧪 Testing Strategy
 
-Planeado:
+Actualmente, la arquitectura está preparada para incorporar:
 
-- Unit Testing
-- Integration Testing
-- E2E Testing
+- Unit Testing.
+- Integration Testing.
+- End-to-End Testing.
 
 ---
 
 # 📈 Escalabilidad
 
-La arquitectura está preparada para:
+La arquitectura está diseñada para facilitar:
 
-- Nuevas features desacopladas
-- Reutilización de UI
-- Escalabilidad horizontal
-- Testing modular
-- Internacionalización
-- Integración con nuevas APIs
-
----
-
-# 📌 Decisiones Técnicas
-
-## Zustand
-
-Elegido por:
-
-- Simplicidad
-- Bajo boilerplate
-- Excelente DX
-- Integración natural con React
-
----
-
-## React Query
-
-Elegido para:
-
-- Manejo de server state
-- Cache automática
-- Invalidación eficiente
-- Sincronización con backend
-
----
-
-## Atomic Design
-
-Elegido para:
-
-- Reutilización
-- Escalabilidad visual
-- Consistencia UI
-- Separación de componentes
+- Incorporación de nuevas features.
+- Reutilización de componentes.
+- Testing modular.
+- Integración con nuevas APIs.
+- Internacionalización.
+- Evolución independiente de los módulos.
 
 ---
 
 # 🚀 Objetivo
 
-Mantener una arquitectura limpia, escalable y mantenible.
+HarFit Web busca mantener una arquitectura **limpia, escalable y mantenible**, donde cada capa tenga una responsabilidad clara.
 
-Cada capa tiene una responsabilidad específica y la UI
-permanece desacoplada de la lógica de negocio.
-
----
-
-# 📜 Filosofía
-
-HarFit busca mantener una arquitectura orientada a:
-
-- Escalabilidad
-- Mantenibilidad
-- Modularidad
-- Separación clara de responsabilidades
-
-Cada módulo encapsula su dominio y la UI permanece
-independiente de la lógica de negocio.
+La aplicación está diseñada para permitir que nuevas funcionalidades puedan incorporarse sin afectar innecesariamente las existentes, manteniendo una separación entre la **interfaz**, la **lógica de negocio** y la **infraestructura**.
