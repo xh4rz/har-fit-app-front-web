@@ -2,7 +2,7 @@
 
 import { ReactNode, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
-import { ReactQueryContextProvider } from './ReactQueryContext';
+import { ReactQueryContextProvider, ThemeContextProvider } from './';
 import { getUser } from '@/modules/user/service';
 import { useAuthStore } from '@/modules/auth/store/useAuthStore';
 import { routeUtils } from '@/lib/routes';
@@ -32,5 +32,9 @@ export function AppContextProvider({ children }: AppContextProps) {
 		initAuth();
 	}, []);
 
-	return <ReactQueryContextProvider>{children}</ReactQueryContextProvider>;
+	return (
+		<ReactQueryContextProvider>
+			<ThemeContextProvider>{children}</ThemeContextProvider>
+		</ReactQueryContextProvider>
+	);
 }

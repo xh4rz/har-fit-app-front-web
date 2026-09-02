@@ -1,5 +1,5 @@
-import { Card } from '@/components/ui/card';
+import { ThemeView } from '@/components/views';
 
 export default function SettingsThemePage() {
-	return <Card className="p-5">ThemePage</Card>;
+	return <ThemeView />;
 }
