@@ -35,9 +35,9 @@ export default function RootLayout({
 				geistSans.variable,
 				geistMono.variable,
 				'font-sans',
-				inter.variable,
-				'dark'
+				inter.variable
 			)}
+			suppressHydrationWarning
 		>
 			<body className="min-h-full flex flex-col">
 				<AppContextProvider>{children}</AppContextProvider>

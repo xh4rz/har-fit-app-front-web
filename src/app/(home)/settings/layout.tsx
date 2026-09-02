@@ -8,11 +8,11 @@ export default function SettingsLayout({
 }) {
 	return (
 		<div className="flex flex-col lg:flex-row gap-4 max-w-4xl mx-auto w-full">
-			<Card className="flex w-full flex-col p-4 md:flex-row">
+			<Card className="w-full min-h-[calc(100vh-3rem)] flex flex-col p-4 md:flex-row">
 				<div>
 					<SettingsSidebar />
 				</div>
-				<div className="w-full">{children}</div>
+				<div className="w-full p-0 md:p-5">{children}</div>
 			</Card>
 		</div>
 	);
