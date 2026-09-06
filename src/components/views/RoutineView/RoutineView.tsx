@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/item';
 import { Skeleton } from '@/components/ui/skeleton';
 import { RoutineItem } from '@/components/molecules';
+import { toast } from 'sonner';
 import {
 	BarbellIcon,
 	CaretRightIcon,
@@ -56,6 +57,7 @@ export const RoutineView = () => {
 					queryKey: ['routines']
 				});
 				setShowModalDeleteRoutine(false);
+				toast.error('Routine successfully removed.');
 			}
 		});
 

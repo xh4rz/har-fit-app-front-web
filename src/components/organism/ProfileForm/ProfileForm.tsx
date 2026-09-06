@@ -28,6 +28,7 @@ import { parse } from 'date-fns';
 import { formatDate, setFormError } from '@/utils';
 import { FloppyDiskIcon, PencilSimpleIcon } from '@phosphor-icons/react';
 import { ApiError } from '@/infrastructure/interfaces';
+import { toast } from 'sonner';
 
 const genderSelectData: { id: number; name: string }[] = [
 	{ id: 1, name: 'Male' },
@@ -76,6 +77,7 @@ export const ProfileForm = () => {
 		try {
 			const updatedUser = await patchUserById(user?.id, dataUser);
 			setUser(updatedUser);
+			toast.success('User updated successfully.');
 		} catch (error) {
 			const errorObj = error as ApiError;
 			setFormError(setError, errorObj);
@@ -139,9 +141,8 @@ export const ProfileForm = () => {
 			});
 			setSelectedImage(null);
 			setEditorOpen(false);
-		} catch (error) {
-			console.error('Error saving image', error);
-		}
+			toast.success('Image updated successfully.');
+		} catch {}
 	};
 
 	const handleDeleteImage = async () => {
@@ -153,9 +154,8 @@ export const ProfileForm = () => {
 			});
 			setSelectedImage(null);
 			setEditorOpen(false);
-		} catch (error) {
-			console.error('Error deleting user image', error);
-		}
+			toast.error('Image deleted successfully.');
+		} catch {}
 	};
 
 	useEffect(() => {
