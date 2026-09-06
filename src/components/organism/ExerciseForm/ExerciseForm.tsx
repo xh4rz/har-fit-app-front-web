@@ -28,6 +28,7 @@ import { Avatar } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { VideoPlayer } from '@/components/atoms';
+import { toast } from 'sonner';
 import {
 	BarbellIcon,
 	CaretLeftIcon,
@@ -133,6 +134,7 @@ export const ExerciseForm = ({
 				await queryClient.invalidateQueries({
 					queryKey: ['exercises']
 				});
+				toast.success('Exercise successfully created.');
 			} else {
 				await patchExerciseById(id, formData);
 				await queryClient.invalidateQueries({
@@ -141,6 +143,7 @@ export const ExerciseForm = ({
 				await queryClient.invalidateQueries({
 					queryKey: ['exercises']
 				});
+				toast.success('Exercise successfully updated.');
 			}
 
 			onOpenChange(false);

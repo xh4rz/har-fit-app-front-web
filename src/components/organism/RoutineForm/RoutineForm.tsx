@@ -16,6 +16,7 @@ import { patchRoutineById, postRoutine } from '@/modules/routine/services';
 import { ExerciseRoutineItem, FormInput } from '@/components/molecules';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { toast } from 'sonner';
 import { ApiError, RoutineResponse } from '@/infrastructure/interfaces';
 import {
 	ArrowLeftIcon,
@@ -88,6 +89,11 @@ export const RoutineForm = ({ mode, routine }: RoutineFormProps) => {
 				});
 			}
 			router.replace('/routine');
+			if (mode === 'create') {
+				toast.success('Routine successfully created.');
+			} else {
+				toast.success('Routine successfully updated.');
+			}
 		},
 		onError: (error: ApiError) => {
 			const errorObj = error;

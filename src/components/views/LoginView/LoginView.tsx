@@ -16,6 +16,7 @@ import { SignInIcon } from '@phosphor-icons/react';
 import { setFormError } from '@/utils';
 import { ApiError } from '@/infrastructure/interfaces';
 import { AppLogo } from '@/components/atoms';
+import { toast } from 'sonner';
 
 type LoginFormData = z.infer<typeof loginFormSchema>;
 
@@ -40,8 +41,11 @@ export const LoginView = () => {
 
 	const onSubmit = async (data: LoginFormData) => {
 		try {
-			await login(data);
+			const loginData = await login(data);
 			router.replace('/home');
+			toast.success(`Hi, ${loginData.user.fullname}, logged in successfully.`, {
+				duration: 5000
+			});
 		} catch (error) {
 			const errorObj = error as ApiError;
 			if (errorObj.statusCode === 401) {

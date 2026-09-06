@@ -6,6 +6,7 @@ import { ReactQueryContextProvider, ThemeContextProvider } from './';
 import { getUser } from '@/modules/user/service';
 import { useAuthStore } from '@/modules/auth/store/useAuthStore';
 import { routeUtils } from '@/lib/routes';
+import { Toaster } from '@/components/ui/sonner';
 
 interface AppContextProps {
 	children: ReactNode;
@@ -34,7 +35,10 @@ export function AppContextProvider({ children }: AppContextProps) {
 
 	return (
 		<ReactQueryContextProvider>
-			<ThemeContextProvider>{children}</ThemeContextProvider>
+			<ThemeContextProvider>
+				{children}
+				<Toaster />
+			</ThemeContextProvider>
 		</ReactQueryContextProvider>
 	);
 }

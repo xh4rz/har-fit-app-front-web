@@ -16,6 +16,7 @@ import {
 import { useState } from 'react';
 import { Dialog } from '@/components/molecules';
 import { Exercise } from '@/infrastructure/interfaces';
+import { toast } from 'sonner';
 
 export const ExerciseDetailView = () => {
 	const { id } = useParams<{ id: string }>();
@@ -54,6 +55,7 @@ export const ExerciseDetailView = () => {
 					refetchType: 'active'
 				});
 				router.replace('/exercise');
+				toast.error('Exercise successfully removed.');
 			}
 		});
 

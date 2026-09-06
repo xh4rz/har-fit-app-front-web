@@ -3,6 +3,7 @@ import { devtools } from 'zustand/middleware';
 import {
 	AuthLoginRequest,
 	AuthRegisterRequest,
+	AuthResponse,
 	User
 } from '@/infrastructure/interfaces';
 import {
@@ -15,8 +16,8 @@ export interface AuthStoreState {
 	isAuthenticated: boolean;
 	user: User | null;
 	loading: boolean;
-	login: (data: AuthLoginRequest) => Promise<void>;
-	register: (data: AuthRegisterRequest) => Promise<void>;
+	login: (data: AuthLoginRequest) => Promise<AuthResponse>;
+	register: (data: AuthRegisterRequest) => Promise<AuthResponse>;
 	logout: () => Promise<void>;
 	setUser: (user: User) => void;
 }
@@ -32,6 +33,7 @@ export const useAuthStore = create<AuthStoreState>()(
 				try {
 					const resp = await authLogin(data);
 					set({ isAuthenticated: true, user: resp.user });
+					return resp;
 				} catch (error) {
 					throw error;
 				} finally {
@@ -43,6 +45,7 @@ export const useAuthStore = create<AuthStoreState>()(
 				try {
 					const resp = await authRegister(data);
 					set({ isAuthenticated: true, user: resp.user });
+					return resp;
 				} catch (error) {
 					throw error;
 				} finally {

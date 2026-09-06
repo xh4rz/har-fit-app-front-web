@@ -17,12 +17,13 @@ import {
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Field, FieldGroup } from '@/components/ui/field';
+import { AppLogo } from '@/components/atoms';
 import { FormInput, FormInputPassword } from '@/components/molecules';
 import { CheckIcon, SignInIcon, XIcon } from '@phosphor-icons/react';
 import { ApiError } from '@/infrastructure/interfaces';
-import { AppLogo } from '@/components/atoms';
 import { setFormError } from '@/utils';
 import { cn } from '@/lib/utils';
+import { toast } from 'sonner';
 
 type SignupFormData = z.infer<typeof signupFormSchema>;
 
@@ -65,8 +66,14 @@ export const SignupView = () => {
 
 	const onSubmit = async (data: SignupFormData) => {
 		try {
-			await register(data);
+			const registerData = await register(data);
 			router.replace('/home');
+			toast.success(
+				`Hi, ${registerData.user.fullname}, account created successfully.`,
+				{
+					duration: 5000
+				}
+			);
 		} catch (error) {
 			const errorObj = error as ApiError;
 			setFormError(setError, errorObj);
@@ -108,6 +115,7 @@ export const SignupView = () => {
 							<FieldGroup>
 								<FormInput
 									required
+									autoFocus
 									disabled={loading}
 									control={control}
 									name="username"
