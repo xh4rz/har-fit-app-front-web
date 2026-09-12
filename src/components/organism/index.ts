@@ -10,3 +10,4 @@ export * from './SettingsSidebar';
 export * from './SidebarNavigationGroups';
 export * from './ProfileForm';
 export * from './ImageEditor';
+export * from './WorkoutForm';

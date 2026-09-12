@@ -2,6 +2,7 @@ interface RoutineSet {
 	set: number;
 	reps: number;
 	kg: number;
+	completed?: boolean;
 }
 
 interface RoutineExercise {

@@ -14,7 +14,7 @@ export * from './ExerciseInputInstructions';
 export * from './FormVideoUpload';
 export * from './ActionsDropdown';
 export * from './ExerciseRoutineItem';
-export * from './ExerciseRoutineInputSets';
+export * from './ExerciseRoutineSets';
 export * from './RoutineItem';
 export * from './HomeItem';
 export * from './UserAvatar';

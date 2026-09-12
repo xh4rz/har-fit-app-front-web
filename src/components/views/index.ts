@@ -8,3 +8,4 @@ export * from './RoutineEditView';
 export * from './HomeView';
 export * from './ProfileView';
 export * from './ThemeView';
+export * from './WorkoutView';
