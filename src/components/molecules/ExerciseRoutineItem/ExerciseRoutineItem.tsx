@@ -10,22 +10,24 @@ import {
 	ItemMedia,
 	ItemTitle
 } from '@/components/ui/item';
-import { ExerciseRoutineInputSets } from '../ExerciseRoutineInputSets';
+import { ExerciseRoutineSets } from '../ExerciseRoutineSets';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { getCloudinaryThumbnail } from '@/utils';
+import { getCloudinaryThumbnail, getInitials } from '@/utils';
 
 type ExerciseItemProps = {
 	exercise: RoutineExercise;
 	index: number;
 	control: Control<RoutineFormInput>;
 	errors: FieldErrors<RoutineFormInput>;
+	isWorkout?: boolean;
 };
 
 export const ExerciseRoutineItem = ({
 	exercise,
 	index,
 	control,
-	errors
+	errors,
+	isWorkout = false
 }: ExerciseItemProps) => {
 	const thumbnail = getCloudinaryThumbnail(exercise.video);
 
@@ -35,7 +37,7 @@ export const ExerciseRoutineItem = ({
 				<ItemMedia>
 					<Avatar className="size-14">
 						<AvatarImage src={thumbnail} alt="image url" />
-						<AvatarFallback>EX</AvatarFallback>
+						<AvatarFallback>{getInitials(exercise.title ?? '')}</AvatarFallback>
 					</Avatar>
 				</ItemMedia>
 				<ItemContent className="gap-0">
@@ -45,10 +47,11 @@ export const ExerciseRoutineItem = ({
 					</ItemDescription>
 				</ItemContent>
 			</Item>
-			<ExerciseRoutineInputSets
+			<ExerciseRoutineSets
 				control={control}
 				exerciseIndex={index}
 				error={errors.exercises}
+				isWorkout={isWorkout}
 			/>
 		</div>
 	);

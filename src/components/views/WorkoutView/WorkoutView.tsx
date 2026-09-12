@@ -3,11 +3,11 @@
 import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { getRoutineById } from '@/modules/routine/services';
-import { RoutineForm } from '@/components/organism';
+import { WorkoutForm } from '@/components/organism';
 import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 
-export const RoutineEditView = () => {
+export const WorkoutView = () => {
 	const { id } = useParams<{ id: string }>();
 
 	const {
@@ -35,5 +35,5 @@ export const RoutineEditView = () => {
 		);
 	}
 
-	return <RoutineForm mode="edit" routine={dataRoutine} />;
+	return <WorkoutForm routine={dataRoutine} />;
 };

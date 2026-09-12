@@ -49,6 +49,10 @@ export const RoutineView = () => {
 		setShowModalDeleteRoutine(true);
 	};
 
+	const handleStartRoutine = (id: string) => {
+		router.push(`/workout/${id}`);
+	};
+
 	const { mutate: deleteRoutine, isPending: isPendingDeleteRoutine } =
 		useMutation({
 			mutationFn: () => deleteRoutineById(selectedRoutineId),
@@ -96,6 +100,7 @@ export const RoutineView = () => {
 									onDelete={() =>
 										handleDeleteRoutine(routine.id, routine.title)
 									}
+									onStart={() => handleStartRoutine(routine.id)}
 								/>
 							))}
 						</div>

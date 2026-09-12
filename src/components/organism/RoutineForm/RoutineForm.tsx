@@ -37,6 +37,10 @@ export const RoutineForm = ({ mode, routine }: RoutineFormProps) => {
 
 	const selectedExercises = useRoutineStore((state) => state.selectedExercises);
 
+	const setSelectedExercises = useRoutineStore(
+		(state) => state.setSelectedExercises
+	);
+
 	const hasSelectedExercises = useRoutineStore(
 		(state) => state.hasSelectedExercises
 	);
@@ -139,7 +143,7 @@ export const RoutineForm = ({ mode, routine }: RoutineFormProps) => {
 		}));
 
 		if (selectedExercises.length === 0) {
-			useRoutineStore.getState().setSelectedExercises(routineExercises);
+			setSelectedExercises(routineExercises);
 		}
 	}, []);
 

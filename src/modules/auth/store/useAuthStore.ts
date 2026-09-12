@@ -12,7 +12,7 @@ import {
 	authRegister
 } from '@/modules/auth/services/auth';
 
-export interface AuthStoreState {
+interface AuthStoreState {
 	isAuthenticated: boolean;
 	user: User | null;
 	loading: boolean;

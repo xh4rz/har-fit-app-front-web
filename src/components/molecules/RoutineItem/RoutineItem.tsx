@@ -14,12 +14,14 @@ interface RoutineItemProps {
 	};
 	onEdit: () => void;
 	onDelete: () => void;
+	onStart: () => void;
 }
 
 export const RoutineItem = ({
 	routine,
 	onEdit,
-	onDelete
+	onDelete,
+	onStart
 }: RoutineItemProps) => {
 	return (
 		<Card className="rounded-lg bg-accent p-4 h-36">
@@ -33,7 +35,12 @@ export const RoutineItem = ({
 				<p className="text-sm text-muted-foreground text-start mb-4 line-clamp-2">
 					{routine.exercises.map((e) => e.title).join(', ')}
 				</p>
-				<Button variant="secondary" size="sm" className="mt-auto">
+				<Button
+					variant="secondary"
+					size="sm"
+					className="mt-auto"
+					onClick={onStart}
+				>
 					Start Routine
 				</Button>
 			</div>

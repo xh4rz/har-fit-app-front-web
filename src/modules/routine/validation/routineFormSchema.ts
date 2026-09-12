@@ -43,7 +43,8 @@ export const routineFormSchema = z.object({
 						z.object({
 							set: z.number(),
 							reps: repsSchema,
-							kg: kgSchema
+							kg: kgSchema,
+							completed: z.boolean().optional()
 						})
 					)
 					.min(1, { message: 'At least one set is required' })

@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { RoutineExercise } from '@/types';
 
-export interface RoutineStoreState {
+interface RoutineStoreState {
 	title: string;
 	selectedExercises: RoutineExercise[];
 	setTitle: (title: string) => void;
