@@ -38,6 +38,7 @@ export const routineFormSchema = z.object({
 				exerciseId: z.string().uuid({
 					message: 'Invalid exercise id'
 				}),
+				restTimer: z.number().optional(),
 				sets: z
 					.array(
 						z.object({

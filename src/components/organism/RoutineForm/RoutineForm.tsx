@@ -153,6 +153,7 @@ export const RoutineForm = ({ mode, routine }: RoutineFormProps) => {
 				title: routine.title,
 				exercises: routine.exercises.map((ex) => ({
 					exerciseId: ex.exerciseId,
+					restTimer: ex.restTimer,
 					sets: ex.sets
 				}))
 			});

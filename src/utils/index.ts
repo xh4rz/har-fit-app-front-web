@@ -7,3 +7,4 @@ export * from './getCloudinaryThumbnail';
 export * from './capitalize';
 export * from './getCroppedImage';
 export * from './formatDate';
+export * from './getRestTimerOptions';
