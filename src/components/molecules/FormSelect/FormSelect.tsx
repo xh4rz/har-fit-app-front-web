@@ -23,7 +23,7 @@ type FormSelectProps<T extends BaseSelectItem, F extends FieldValues> = {
 	control: Control<F>;
 	label: string;
 	placeholder: string;
-	loading: boolean;
+	loading?: boolean;
 	required?: boolean;
 	data?: T[];
 } & Omit<
@@ -35,7 +35,7 @@ export const FormSelect = <T extends BaseSelectItem, F extends FieldValues>({
 	control,
 	label,
 	placeholder,
-	loading,
+	loading = false,
 	required,
 	data,
 	...selectProps

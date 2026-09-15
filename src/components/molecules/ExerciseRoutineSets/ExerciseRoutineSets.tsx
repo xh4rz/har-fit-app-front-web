@@ -20,6 +20,8 @@ import {
 	TableHeader,
 	TableRow
 } from '@/components/ui/table';
+import { FormSelect } from '../FormSelect';
+import { getRestTimerOptions } from '@/utils';
 
 interface ExerciseRoutineSetsProps {
 	control: Control<RoutineFormInput>;
@@ -42,6 +44,7 @@ export const ExerciseRoutineSets = ({
 	});
 	const setsError = error?.[exerciseIndex]?.sets;
 	const errorsMessage = setsError?.message || setsError?.root?.message;
+	const initialized = useRef(false);
 
 	const handleChange = (
 		text: string,
@@ -78,18 +81,18 @@ export const ExerciseRoutineSets = ({
 		return String(value);
 	};
 
-	const initialized = useRef(false);
+	const createSet = (set: number) => ({
+		set,
+		kg: '',
+		reps: '',
+		...(isWorkout && { completed: false })
+	});
 
 	useEffect(() => {
 		if (initialized.current) return;
 
 		if (fields.length === 0) {
-			append({
-				set: 1,
-				kg: '',
-				reps: '',
-				completed: false
-			});
+			append(createSet(1));
 		}
 
 		initialized.current = true;
@@ -97,6 +100,15 @@ export const ExerciseRoutineSets = ({
 
 	return (
 		<div>
+			<div className="w-full sm:w-50">
+				<FormSelect
+					control={control}
+					name={`exercises.${exerciseIndex}.restTimer`}
+					label="Rest Timer"
+					placeholder="Off"
+					data={getRestTimerOptions}
+				/>
+			</div>
 			<Table className="mb-4 [&_td]:p-1">
 				<TableHeader>
 					<TableRow className="border-none hover:bg-transparent text-xs">
@@ -187,7 +199,6 @@ export const ExerciseRoutineSets = ({
 												/>
 											</TableCell>
 										)}
-
 										<TableCell align="center">
 											<XIcon
 												onClick={() => remove(index)}
@@ -205,15 +216,7 @@ export const ExerciseRoutineSets = ({
 				variant="outline"
 				className="w-full text-primary hover:text-primary"
 				iconLeft={<PlusIcon />}
-				onClick={() => {
-					const newIndex = fields.length;
-					append({
-						set: newIndex + 1,
-						kg: '',
-						reps: '',
-						completed: false
-					});
-				}}
+				onClick={() => append(createSet(fields.length + 1))}
 			>
 				Add set
 			</Button>

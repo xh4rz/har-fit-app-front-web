@@ -22,5 +22,6 @@ export interface RoutineResponse {
 		title: string;
 		video: string;
 		primaryMuscleName: string;
+		restTimer: number;
 	})[];
 }
