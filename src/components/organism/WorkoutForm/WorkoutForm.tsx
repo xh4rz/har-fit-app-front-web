@@ -6,25 +6,23 @@ import { useRouter } from 'next/navigation';
 import { FieldValues, useFieldArray, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useRoutineStore } from '@/modules/routine/store/useRoutineStore';
+
 import {
 	RoutineFormInput,
 	RoutineFormOutput,
 	routineFormSchema
 } from '@/modules/routine/validation/routineFormSchema';
-import { patchRoutineById, postRoutine } from '@/modules/routine/services';
+
 import { ExerciseRoutineItem, FormInput } from '@/components/molecules';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { ApiError, RoutineResponse } from '@/infrastructure/interfaces';
-import {
-	ArrowLeftIcon,
-	BarbellIcon,
-	FloppyDiskIcon
-} from '@phosphor-icons/react';
+import { ArrowLeftIcon, FloppyDiskIcon } from '@phosphor-icons/react';
 import { setFormError } from '@/utils';
 import { useWorkoutStore } from '@/modules/workout/store/useWorkoutStore';
+import { useTimer } from '@/hooks';
+import { Separator } from '@/components/ui/separator';
 
 interface RoutineFormProps {
 	routine?: RoutineResponse;
@@ -32,12 +30,14 @@ interface RoutineFormProps {
 
 export const WorkoutForm = ({ routine }: RoutineFormProps) => {
 	const router = useRouter();
-
 	const queryClient = useQueryClient();
-
 	const workout = useWorkoutStore((state) => state.workout);
+	const startedAt = useWorkoutStore((state) => state.startedAt);
 	const setWorkout = useWorkoutStore((state) => state.setWorkout);
+	const startWorkout = useWorkoutStore((state) => state.startWorkout);
 	const finishWorkout = useWorkoutStore((state) => state.finishWorkout);
+
+	const timer = useTimer(startedAt);
 
 	const {
 		control,
@@ -46,7 +46,7 @@ export const WorkoutForm = ({ routine }: RoutineFormProps) => {
 		setError,
 		clearErrors,
 		reset,
-		formState: { errors }
+		formState: { isDirty, errors }
 	} = useForm<RoutineFormInput, FieldValues, RoutineFormOutput>({
 		resolver: zodResolver(routineFormSchema),
 		mode: 'onSubmit',
@@ -104,94 +104,6 @@ export const WorkoutForm = ({ routine }: RoutineFormProps) => {
 		// saveWorkout(data);
 	};
 
-	// useEffect(() => {
-	// 	if (selectedExercises.length === 0) {
-	// 		replace([]);
-	// 		clearErrors('exercises');
-	// 		return;
-	// 	}
-
-	// 	const currentExercises = getValues('exercises');
-
-	// 	const formExercises = selectedExercises.map((exercise) => {
-	// 		const existing = currentExercises.find(
-	// 			(f) => f.exerciseId === exercise.id
-	// 		);
-
-	// 		return {
-	// 			exerciseId: exercise.id,
-	// 			sets: existing?.sets || []
-	// 		};
-	// 	});
-
-	// 	replace(formExercises);
-	// }, [selectedExercises]);
-
-	// useEffect(() => {
-	// 	if (!routine) return;
-
-	// 	const routineExercises = routine.exercises.map((ex) => ({
-	// 		id: ex.exerciseId,
-	// 		title: ex.title,
-	// 		video: ex.video,
-	// 		primaryMuscleName: ex.primaryMuscleName
-	// 	}));
-
-	// 	if (selectedExercises.length === 0) {
-	// 		setSelectedExercises(routineExercises);
-	// 	}
-	// }, []);
-
-	// useEffect(() => {
-	// 	if (routine) {
-	// 		reset({
-	// 			title: routine.title,
-	// 			exercises: routine.exercises.map((ex) => ({
-	// 				exerciseId: ex.exerciseId,
-	// 				sets: ex.sets
-	// 			}))
-	// 		});
-	// 	}
-	// }, [routine]);
-
-	// useEffect(() => {
-	// 	return () => {
-	// 		clearRoutine();
-	// 	};
-	// }, []);
-
-	// useEffect(() => {
-	// 	if (!routine) return;
-
-	// 	if (workout) {
-	// 		reset(workout);
-	// 		return;
-	// 	}
-
-	// 	const initialWorkout: RoutineFormInput = {
-	// 		title: routine.title,
-	// 		exercises: routine.exercises.map((ex) => ({
-	// 			exerciseId: ex.exerciseId,
-	// 			sets: ex.sets.map((set) => ({
-	// 				...set,
-	// 				completed: false
-	// 			}))
-	// 		}))
-	// 	};
-
-	// 	setWorkout(initialWorkout);
-	// 	reset(initialWorkout);
-
-	// 	const routineExercises = routine.exercises.map((ex) => ({
-	// 		id: ex.exerciseId,
-	// 		title: ex.title,
-	// 		video: ex.video,
-	// 		primaryMuscleName: ex.primaryMuscleName
-	// 	}));
-
-	// 	setSelectedExercises(routineExercises);
-	// }, [routine]);
-
 	useEffect(() => {
 		if (!routine) return;
 
@@ -204,21 +116,23 @@ export const WorkoutForm = ({ routine }: RoutineFormProps) => {
 			title: routine.title,
 			exercises: routine.exercises.map((ex) => ({
 				exerciseId: ex.exerciseId,
+				restTimer: ex.restTimer,
 				sets: ex.sets.map((set) => ({
 					...set,
-					completed: false
+					completed: set.completed ?? false
 				}))
 			}))
 		};
 
 		setWorkout(initialWorkout);
 		reset(initialWorkout);
+		startWorkout();
 	}, [routine]);
 
 	useEffect(() => {
-		if (!workout) return;
-
-		setWorkout(formValues as RoutineFormInput);
+		if (isDirty) {
+			setWorkout(formValues as RoutineFormInput);
+		}
 	}, [formValues]);
 
 	return (
@@ -226,13 +140,12 @@ export const WorkoutForm = ({ routine }: RoutineFormProps) => {
 			<div className="flex flex-row gap-2 items-center">
 				<Link
 					href="/routine"
-					className={
-						(buttonVariants({ variant: 'outline', size: 'icon-lg' }), 'flex-1')
-					}
+					className={buttonVariants({ variant: 'outline', size: 'icon-lg' })}
 				>
 					<ArrowLeftIcon />
 				</Link>
-				{/* <h2 className="text-2xl font-semibold flex-1">Log Workout</h2> */}
+
+				<h2 className="text-2xl font-semibold flex-1">Workout</h2>
 
 				{/* <Button onClick={() => finishWorkout()}>Limpiar</Button> */}
 				<Button
@@ -242,9 +155,16 @@ export const WorkoutForm = ({ routine }: RoutineFormProps) => {
 					iconLeft={<FloppyDiskIcon />}
 					onClick={handleSubmit(onSaveWorkout)}
 				>
-					Finish Routine
+					Finish Workout
 				</Button>
 			</div>
+
+			<div className="flex flex-col gap-1">
+				<span className="text-sm">Duration</span>
+				<span className="text-sm text-secondary flex-1 ">{timer}</span>
+			</div>
+
+			<Separator />
 
 			<FormInput
 				required
