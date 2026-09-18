@@ -6,8 +6,8 @@ export const useTimer = (startedAt: number | null) => {
 
 	const [elapsedSeconds, setElapsedSeconds] = useState(calculateTimer);
 
-	const minutes = Math.floor(elapsedSeconds / 60);
-
+	const hours = Math.floor(elapsedSeconds / 3600);
+	const minutes = Math.floor((elapsedSeconds % 3600) / 60);
 	const seconds = elapsedSeconds % 60;
 
 	useEffect(() => {
@@ -20,5 +20,9 @@ export const useTimer = (startedAt: number | null) => {
 		return () => clearInterval(interval);
 	}, [startedAt]);
 
-	return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+	return hours > 0
+		? `${hours}h ${minutes}min ${seconds}s`
+		: minutes > 0
+			? `${minutes}min ${seconds}s`
+			: `${seconds}s`;
 };

@@ -214,7 +214,7 @@ export const ExerciseRoutineSets = ({
 			</Table>
 			<Button
 				variant="outline"
-				className="w-full text-primary hover:text-primary"
+				className="w-full text-primary hover:text-primary mb-2"
 				iconLeft={<PlusIcon />}
 				onClick={() => append(createSet(fields.length + 1))}
 			>
