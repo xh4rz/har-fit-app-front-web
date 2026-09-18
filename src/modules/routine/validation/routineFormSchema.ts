@@ -26,33 +26,37 @@ const kgSchema = coerceNumber(
 		.min(1, { message: 'KG must be greater than 0' })
 );
 
-export const routineFormSchema = z.object({
-	title: z
-		.string()
-		.trim()
-		.min(1, { message: 'Title is required' })
-		.min(5, { message: 'Title must be at least 5 characters' }),
-	exercises: z
-		.array(
-			z.object({
-				exerciseId: z.string().uuid({
-					message: 'Invalid exercise id'
-				}),
-				restTimer: z.number().optional(),
-				sets: z
-					.array(
-						z.object({
-							set: z.number(),
-							reps: repsSchema,
-							kg: kgSchema,
-							completed: z.boolean().optional()
-						})
-					)
-					.min(1, { message: 'At least one set is required' })
-			})
-		)
-		.min(1, { message: 'Add at least one exercise' })
-});
+const createRoutineFormSchema = (isWorkout = false) =>
+	z.object({
+		title: z
+			.string()
+			.trim()
+			.min(1, { message: 'Title is required' })
+			.min(5, { message: 'Title must be at least 5 characters' }),
+		exercises: z
+			.array(
+				z.object({
+					exerciseId: z.string().uuid({
+						message: 'Invalid exercise id'
+					}),
+					restTimer: z.number().optional(),
+					sets: z
+						.array(
+							z.object({
+								set: z.number(),
+								reps: repsSchema,
+								kg: kgSchema,
+								completed: z.boolean().optional()
+							})
+						)
+						.min(isWorkout ? 0 : 1, { message: 'At least 1 set is required' })
+				})
+			)
+			.min(1, { message: 'Add at least one exercise' })
+	});
+
+export const routineFormSchema = createRoutineFormSchema();
+export const workoutFormSchema = createRoutineFormSchema(true);
 
 export type RoutineFormInput = z.input<typeof routineFormSchema>;
 export type RoutineFormOutput = z.output<typeof routineFormSchema>;

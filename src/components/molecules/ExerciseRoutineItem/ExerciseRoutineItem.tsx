@@ -1,6 +1,7 @@
 'use client';
 
 import { Control, FieldErrors } from 'react-hook-form';
+import Link from 'next/link';
 import { RoutineFormInput } from '@/modules/routine/validation/routineFormSchema';
 import { RoutineExercise } from '@/types';
 import {
@@ -41,7 +42,11 @@ export const ExerciseRoutineItem = ({
 					</Avatar>
 				</ItemMedia>
 				<ItemContent className="gap-0">
-					<ItemTitle className="text-xs">{exercise.title}</ItemTitle>
+					<Link href={`/exercise/${exercise.id}`} className="w-fit" passHref>
+						<ItemTitle className="text-xs hover:text-secondary">
+							{exercise.title}
+						</ItemTitle>
+					</Link>
 					<ItemDescription className="text-xs text-foreground/50">
 						{exercise.primaryMuscleName}
 					</ItemDescription>
