@@ -22,17 +22,19 @@ import {
 	FilePlusIcon
 } from '@phosphor-icons/react';
 import { DeleteAlertDialog } from '@/components/organism';
+import { useWorkoutStore } from '@/modules/workout/store/useWorkoutStore';
+import { useTimer } from '@/hooks';
 
 export const RoutineView = () => {
 	const router = useRouter();
-
 	const queryClient = useQueryClient();
-
 	const [selectedRoutineId, setSelectedRoutineId] = useState<string>('');
-
 	const [selectedRoutineTitle, setSelectedRoutineTitle] = useState<string>('');
-
 	const [showModalDeleteRoutine, setShowModalDeleteRoutine] = useState(false);
+	const routineId = useWorkoutStore((state) => state.routineId);
+	const startedAt = useWorkoutStore((state) => state.startedAt);
+	const timer = useTimer(startedAt);
+	const hasWorkoutInProgress = !!routineId && !!startedAt;
 
 	const { data: dataRoutines, isPending: isPendingRoutines } = useQuery({
 		queryKey: ['routines'],
@@ -92,17 +94,24 @@ export const RoutineView = () => {
 							<span className="text-sm ">{dataRoutines?.length}</span>
 						</div>
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full items-stretch">
-							{dataRoutines?.map((routine) => (
-								<RoutineItem
-									key={routine.id}
-									routine={routine}
-									onEdit={() => handleEditRoutine(routine.id)}
-									onDelete={() =>
-										handleDeleteRoutine(routine.id, routine.title)
-									}
-									onStart={() => handleStartRoutine(routine.id)}
-								/>
-							))}
+							{dataRoutines?.map((routine) => {
+								const isActive = routine.id === routineId;
+								const isStartDisabled = hasWorkoutInProgress && !isActive;
+								return (
+									<RoutineItem
+										key={routine.id}
+										routine={routine}
+										isActive={isActive}
+										isStartDisabled={isStartDisabled}
+										timer={timer}
+										onEdit={() => handleEditRoutine(routine.id)}
+										onDelete={() =>
+											handleDeleteRoutine(routine.id, routine.title)
+										}
+										onStart={() => handleStartRoutine(routine.id)}
+									/>
+								);
+							})}
 						</div>
 					</div>
 				) : (
@@ -130,7 +139,6 @@ export const RoutineView = () => {
 					</Link>
 				</Item>
 			</Card>
-
 			<DeleteAlertDialog
 				title={`Delete '${selectedRoutineTitle}' Routine`}
 				description="Are you sure you want to delete this routine?"

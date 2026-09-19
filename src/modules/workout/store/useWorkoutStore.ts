@@ -5,7 +5,8 @@ import { RoutineFormInput } from '@/modules/routine/validation/routineFormSchema
 interface WorkoutStoreState {
 	workout: RoutineFormInput | null;
 	startedAt: number | null;
-	setWorkout: (workout: RoutineFormInput) => void;
+	routineId: string | null;
+	setWorkout: (routineId: string, workout: RoutineFormInput) => void;
 	startWorkout: () => void;
 	finishWorkout: () => void;
 }
@@ -16,12 +17,14 @@ export const useWorkoutStore = create<WorkoutStoreState>()(
 			(set) => ({
 				workout: null,
 				startedAt: null,
-				setWorkout: (workout) => set({ workout }),
+				routineId: null,
+				setWorkout: (routineId, workout) => set({ routineId, workout }),
 				startWorkout: () => set({ startedAt: Date.now() }),
 				finishWorkout: () =>
 					set({
 						workout: null,
-						startedAt: null
+						startedAt: null,
+						routineId: null
 					})
 			}),
 			{
