@@ -195,15 +195,19 @@ export const ExerciseRoutineSets = ({
 													onCheckedChange={(value) =>
 														completedField.onChange(value === true)
 													}
-													className="data-[state=checked]:bg-green-500! data-[state=checked]:border-green-500 data-[state=checked]:text-white"
+													className="data-[state=checked]:bg-green-500! data-[state=checked]:border-green-500
+													 data-[state=checked]:text-white size-5"
 												/>
 											</TableCell>
 										)}
 										<TableCell align="center">
-											<XIcon
+											<Button
+												variant="destructive"
+												size="icon-xs"
 												onClick={() => remove(index)}
-												className="size-4 text-destructive/70 hover:cursor-pointer hover:text-destructive"
-											/>
+											>
+												<XIcon />
+											</Button>
 										</TableCell>
 									</TableRow>
 								)}

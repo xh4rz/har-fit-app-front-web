@@ -64,7 +64,7 @@ export const RoutineForm = ({ mode, routine }: RoutineFormProps) => {
 		}
 	});
 
-	const { fields, replace } = useFieldArray({
+	const { fields, replace, remove } = useFieldArray({
 		control,
 		name: 'exercises'
 	});
@@ -107,6 +107,15 @@ export const RoutineForm = ({ mode, routine }: RoutineFormProps) => {
 
 	const onSaveRoutine = (data: RoutineFormOutput) => {
 		saveRoutine(data);
+	};
+
+	const handleRemoveExercise = (index: number) => {
+		const exerciseId = fields[index].exerciseId;
+		const updatedExercises = selectedExercises.filter(
+			(exercise) => exercise.id !== exerciseId
+		);
+		remove(index);
+		setSelectedExercises(updatedExercises);
 	};
 
 	useEffect(() => {
@@ -228,6 +237,7 @@ export const RoutineForm = ({ mode, routine }: RoutineFormProps) => {
 								index={index}
 								control={control}
 								errors={errors}
+								onRemove={() => handleRemoveExercise(index)}
 							/>
 						</Card>
 					);
