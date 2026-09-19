@@ -14,21 +14,25 @@ import {
 import { ExerciseRoutineSets } from '../ExerciseRoutineSets';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { getCloudinaryThumbnail, getInitials } from '@/utils';
+import { TrashIcon } from '@phosphor-icons/react';
+import { Button } from '@/components/ui/button';
 
-type ExerciseItemProps = {
+interface ExerciseItemProps {
 	exercise: RoutineExercise;
 	index: number;
 	control: Control<RoutineFormInput>;
 	errors: FieldErrors<RoutineFormInput>;
 	isWorkout?: boolean;
-};
+	onRemove?: () => void;
+}
 
 export const ExerciseRoutineItem = ({
 	exercise,
 	index,
 	control,
 	errors,
-	isWorkout = false
+	isWorkout = false,
+	onRemove
 }: ExerciseItemProps) => {
 	const thumbnail = getCloudinaryThumbnail(exercise.video);
 
@@ -41,15 +45,22 @@ export const ExerciseRoutineItem = ({
 						<AvatarFallback>{getInitials(exercise.title ?? '')}</AvatarFallback>
 					</Avatar>
 				</ItemMedia>
-				<ItemContent className="gap-0">
-					<Link href={`/exercise/${exercise.id}`} className="w-fit" passHref>
-						<ItemTitle className="text-xs hover:text-secondary">
-							{exercise.title}
-						</ItemTitle>
-					</Link>
-					<ItemDescription className="text-xs text-foreground/50">
-						{exercise.primaryMuscleName}
-					</ItemDescription>
+				<ItemContent className="flex flex-row justify-between">
+					<div>
+						<Link href={`/exercise/${exercise.id}`} className="w-fit" passHref>
+							<ItemTitle className="text-xs hover:text-secondary">
+								{exercise.title}
+							</ItemTitle>
+						</Link>
+						<ItemDescription className="text-xs text-foreground/50">
+							{exercise.primaryMuscleName}
+						</ItemDescription>
+					</div>
+					{!isWorkout && (
+						<Button variant="destructive" size="icon-sm" onClick={onRemove}>
+							<TrashIcon />
+						</Button>
+					)}
 				</ItemContent>
 			</Item>
 			<ExerciseRoutineSets

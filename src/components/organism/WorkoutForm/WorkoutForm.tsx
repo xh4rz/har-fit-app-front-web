@@ -235,7 +235,7 @@ export const WorkoutForm = ({ routine }: WorkoutFormProps) => {
 				return (
 					<Card
 						key={field.id}
-						className=" rounded-lg p-4 flex justify-center items-center text-center gap-2"
+						className="rounded-lg p-4 flex justify-center items-center text-center gap-2"
 					>
 						<ExerciseRoutineItem
 							exercise={{
