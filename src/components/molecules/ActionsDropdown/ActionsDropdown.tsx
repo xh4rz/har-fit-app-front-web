@@ -17,18 +17,20 @@ interface ExerciseActionsDropdownProps {
 	onDelete: () => void;
 	vertical?: boolean;
 	size?: ComponentProps<typeof Button>['size'];
+	disabledOptions?: boolean;
 }
 
 export const ActionsDropdown = ({
 	onEdit,
 	onDelete,
 	vertical = false,
-	size = 'icon-xs'
+	size = 'icon-xs',
+	disabledOptions = false
 }: ExerciseActionsDropdownProps) => {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button variant="ghost" className="" size={size}>
+				<Button variant="ghost" size={size} disabled={disabledOptions}>
 					{vertical ? (
 						<DotsThreeVerticalIcon className="size-6 text-primary" />
 					) : (

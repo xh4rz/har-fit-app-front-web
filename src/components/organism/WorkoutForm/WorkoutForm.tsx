@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FieldValues, useFieldArray, useForm, useWatch } from 'react-hook-form';
@@ -16,11 +16,16 @@ import { Button, buttonVariants } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { ApiError, RoutineResponse } from '@/infrastructure/interfaces';
-import { ArrowLeftIcon, FloppyDiskIcon } from '@phosphor-icons/react';
+import {
+	ArrowLeftIcon,
+	FloppyDiskIcon,
+	TrashIcon
+} from '@phosphor-icons/react';
 import { setFormError } from '@/utils';
 import { useWorkoutStore } from '@/modules/workout/store/useWorkoutStore';
 import { useTimer } from '@/hooks';
 import { Separator } from '@/components/ui/separator';
+import { DeleteAlertDialog } from '../DeleteAlertDialog';
 
 interface WorkoutFormProps {
 	routine: RoutineResponse;
@@ -29,13 +34,14 @@ interface WorkoutFormProps {
 export const WorkoutForm = ({ routine }: WorkoutFormProps) => {
 	const router = useRouter();
 	const queryClient = useQueryClient();
+	const [showModalDeleteWorkou, setShowModalDeleteWorkout] = useState(false);
 	const workout = useWorkoutStore((state) => state.workout);
 	const startedAt = useWorkoutStore((state) => state.startedAt);
 	const setWorkout = useWorkoutStore((state) => state.setWorkout);
 	const startWorkout = useWorkoutStore((state) => state.startWorkout);
 	const finishWorkout = useWorkoutStore((state) => state.finishWorkout);
-
 	const timer = useTimer(startedAt);
+	const routineId = routine.id;
 
 	const {
 		control,
@@ -93,6 +99,12 @@ export const WorkoutForm = ({ routine }: WorkoutFormProps) => {
 		// saveWorkout(data);
 	};
 
+	const onDeleteWorkout = () => {
+		finishWorkout();
+		toast.error('Workout successfully removed.');
+		router.replace('/routine');
+	};
+
 	const { mutate: saveWorkout, isPending: loading } = useMutation({
 		mutationFn: async (data: RoutineFormOutput) => {
 			// if (mode === 'create') {
@@ -146,20 +158,20 @@ export const WorkoutForm = ({ routine }: WorkoutFormProps) => {
 			}))
 		};
 
-		setWorkout(initialWorkout);
+		setWorkout(routineId, initialWorkout);
 		reset(initialWorkout);
 		startWorkout();
 	}, [routine]);
 
 	useEffect(() => {
 		if (isDirty) {
-			setWorkout(formValues as RoutineFormInput);
+			setWorkout(routineId, formValues as RoutineFormInput);
 		}
 	}, [formValues]);
 
 	return (
 		<div className="flex flex-col gap-4">
-			<div className="flex flex-row gap-2 items-center">
+			<div className="flex items-center gap-2">
 				<Link
 					href="/routine"
 					className={buttonVariants({ variant: 'outline', size: 'icon-lg' })}
@@ -167,17 +179,27 @@ export const WorkoutForm = ({ routine }: WorkoutFormProps) => {
 					<ArrowLeftIcon />
 				</Link>
 
-				<h2 className="text-2xl font-semibold flex-1">Workout</h2>
+				<h2 className="text-2xl font-semibold">Workout</h2>
 
-				<Button
-					size="lg"
-					loading={loading}
-					variant="secondary"
-					iconLeft={<FloppyDiskIcon />}
-					onClick={handleSubmit(onSaveWorkout)}
-				>
-					Save Workout
-				</Button>
+				<div className="ml-auto flex items-center gap-2">
+					<Button
+						size="icon-lg"
+						variant="destructive"
+						onClick={() => setShowModalDeleteWorkout(true)}
+					>
+						<TrashIcon />
+					</Button>
+
+					<Button
+						size="lg"
+						loading={loading}
+						variant="secondary"
+						iconLeft={<FloppyDiskIcon />}
+						onClick={handleSubmit(onSaveWorkout)}
+					>
+						Save Workout
+					</Button>
+				</div>
 			</div>
 
 			<div className="flex flex-col gap-4 sm:flex-row">
@@ -201,7 +223,7 @@ export const WorkoutForm = ({ routine }: WorkoutFormProps) => {
 
 			<Separator />
 
-			<span>{routine?.title}</span>
+			<span className="text-primary">{routine?.title}</span>
 
 			{fields.map((field, index) => {
 				const exercise = routine?.exercises.find(
@@ -228,6 +250,16 @@ export const WorkoutForm = ({ routine }: WorkoutFormProps) => {
 					</Card>
 				);
 			})}
+
+			<DeleteAlertDialog
+				title={`Discard '${routine.title}' Workout`}
+				description="Are you sure you want to discard this workout?"
+				deleteText="Discard"
+				open={showModalDeleteWorkou}
+				loading={false}
+				onOpenChange={setShowModalDeleteWorkout}
+				onDelete={onDeleteWorkout}
+			/>
 		</div>
 	);
 };

@@ -12,6 +12,9 @@ interface RoutineItemProps {
 			title: string;
 		}[];
 	};
+	isActive: boolean;
+	isStartDisabled: boolean;
+	timer: string;
 	onEdit: () => void;
 	onDelete: () => void;
 	onStart: () => void;
@@ -19,6 +22,9 @@ interface RoutineItemProps {
 
 export const RoutineItem = ({
 	routine,
+	isActive,
+	isStartDisabled,
+	timer,
 	onEdit,
 	onDelete,
 	onStart
@@ -30,18 +36,23 @@ export const RoutineItem = ({
 					<h3 className="font-bold text-foreground truncate">
 						{routine.title}
 					</h3>
-					<ActionsDropdown onEdit={onEdit} onDelete={onDelete} />
+					<ActionsDropdown
+						onEdit={onEdit}
+						onDelete={onDelete}
+						disabledOptions={isActive}
+					/>
 				</div>
 				<p className="text-sm text-muted-foreground text-start mb-4 line-clamp-2">
 					{routine.exercises.map((e) => e.title).join(', ')}
 				</p>
 				<Button
-					variant="secondary"
+					variant={isActive ? 'default' : 'secondary'}
 					size="sm"
-					className="mt-auto"
+					className={`mt-auto ${isActive && 'bg-green-500 hover:bg-green-600 text-white'}`}
+					disabled={isStartDisabled}
 					onClick={onStart}
 				>
-					Start Routine
+					{isActive ? `Workout ${timer}` : 'Start Routine'}
 				</Button>
 			</div>
 		</Card>

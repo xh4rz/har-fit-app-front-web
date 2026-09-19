@@ -1,6 +1,6 @@
 'use client';
 
-import { useParams } from 'next/navigation';
+import { redirect, useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { getRoutineById } from '@/modules/routine/services';
 import { WorkoutForm } from '@/components/organism';
@@ -27,13 +27,7 @@ export const WorkoutView = () => {
 		);
 	}
 
-	if (isErrorRoutine) {
-		return (
-			<Card className="rounded-lg p-4 h-[calc(100vh-3rem)] flex justify-center items-center text-center">
-				<span>An error occurred while loading the routine.</span>
-			</Card>
-		);
-	}
+	if (isErrorRoutine) redirect('/routine');
 
 	return <WorkoutForm routine={dataRoutine} />;
 };
