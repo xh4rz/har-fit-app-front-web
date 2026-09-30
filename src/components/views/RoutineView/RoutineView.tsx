@@ -33,7 +33,7 @@ export const RoutineView = () => {
 	const [showModalDeleteRoutine, setShowModalDeleteRoutine] = useState(false);
 	const routineId = useWorkoutStore((state) => state.routineId);
 	const startedAt = useWorkoutStore((state) => state.startedAt);
-	const timer = useTimer(startedAt);
+	const { formattedTime } = useTimer(startedAt);
 	const hasWorkoutInProgress = !!routineId && !!startedAt;
 
 	const { data: dataRoutines, isPending: isPendingRoutines } = useQuery({
@@ -103,7 +103,7 @@ export const RoutineView = () => {
 										routine={routine}
 										isActive={isActive}
 										isStartDisabled={isStartDisabled}
-										timer={timer}
+										timer={formattedTime}
 										onEdit={() => handleEditRoutine(routine.id)}
 										onDelete={() =>
 											handleDeleteRoutine(routine.id, routine.title)
