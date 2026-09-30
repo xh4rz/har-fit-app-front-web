@@ -20,9 +20,15 @@ export const useTimer = (startedAt: number | null) => {
 		return () => clearInterval(interval);
 	}, [startedAt]);
 
-	return hours > 0
-		? `${hours}h ${minutes}min ${seconds}s`
-		: minutes > 0
-			? `${minutes}min ${seconds}s`
-			: `${seconds}s`;
+	const formattedTime =
+		hours > 0
+			? `${hours}h ${minutes}min ${seconds}s`
+			: minutes > 0
+				? `${minutes}min ${seconds}s`
+				: `${seconds}s`;
+
+	return {
+		elapsedSeconds,
+		formattedTime
+	};
 };

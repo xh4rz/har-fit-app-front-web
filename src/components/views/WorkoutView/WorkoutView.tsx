@@ -29,5 +29,5 @@ export const WorkoutView = () => {
 
 	if (isErrorRoutine) redirect('/routine');
 
-	return <WorkoutForm routine={dataRoutine} />;
+	return <WorkoutForm mode="create" routine={dataRoutine} />;
 };
