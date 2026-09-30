@@ -85,7 +85,7 @@ export const ExerciseRoutineSets = ({
 		set,
 		kg: '',
 		reps: '',
-		...(isWorkout && { completed: false })
+		completed: false
 	});
 
 	useEffect(() => {

@@ -163,7 +163,10 @@ export const RoutineForm = ({ mode, routine }: RoutineFormProps) => {
 				exercises: routine.exercises.map((ex) => ({
 					exerciseId: ex.exerciseId,
 					restTimer: ex.restTimer,
-					sets: ex.sets
+					sets: ex.sets.map((set) => ({
+						...set,
+						completed: false
+					}))
 				}))
 			});
 		}

@@ -33,6 +33,10 @@ const createRoutineFormSchema = (isWorkout = false) =>
 			.trim()
 			.min(1, { message: 'Title is required' })
 			.min(5, { message: 'Title must be at least 5 characters' }),
+		description: z
+			.string()
+			.max(300, 'Description can have a maximum of 300 characters')
+			.optional(),
 		exercises: z
 			.array(
 				z.object({
@@ -46,7 +50,7 @@ const createRoutineFormSchema = (isWorkout = false) =>
 								set: z.number(),
 								reps: repsSchema,
 								kg: kgSchema,
-								completed: z.boolean().optional()
+								completed: z.boolean()
 							})
 						)
 						.min(isWorkout ? 0 : 1, { message: 'At least 1 set is required' })
