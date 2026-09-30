@@ -11,36 +11,42 @@ import {
 	RoutineFormOutput,
 	workoutFormSchema
 } from '@/modules/routine/validation/routineFormSchema';
-import { ExerciseRoutineItem } from '@/components/molecules';
+import { useWorkoutStore } from '@/modules/workout/store/useWorkoutStore';
+import {
+	ExerciseRoutineItem,
+	FormInput,
+	FormTextarea
+} from '@/components/molecules';
 import { Button, buttonVariants } from '@/components/ui/button';
+import { DeleteAlertDialog } from '../DeleteAlertDialog';
 import { Card } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
-import { ApiError, RoutineResponse } from '@/infrastructure/interfaces';
 import {
 	ArrowLeftIcon,
 	FloppyDiskIcon,
 	TrashIcon
 } from '@phosphor-icons/react';
 import { setFormError } from '@/utils';
-import { useWorkoutStore } from '@/modules/workout/store/useWorkoutStore';
+import { ApiError, RoutineResponse } from '@/infrastructure/interfaces';
 import { useTimer } from '@/hooks';
-import { Separator } from '@/components/ui/separator';
-import { DeleteAlertDialog } from '../DeleteAlertDialog';
+import { postWorkout } from '@/modules/workout/services';
 
 interface WorkoutFormProps {
+	mode: 'create' | 'edit';
 	routine: RoutineResponse;
 }
 
-export const WorkoutForm = ({ routine }: WorkoutFormProps) => {
+export const WorkoutForm = ({ mode, routine }: WorkoutFormProps) => {
 	const router = useRouter();
 	const queryClient = useQueryClient();
-	const [showModalDeleteWorkou, setShowModalDeleteWorkout] = useState(false);
+	const [showModalDeleteWorkout, setShowModalDeleteWorkout] = useState(false);
 	const workout = useWorkoutStore((state) => state.workout);
 	const startedAt = useWorkoutStore((state) => state.startedAt);
 	const setWorkout = useWorkoutStore((state) => state.setWorkout);
 	const startWorkout = useWorkoutStore((state) => state.startWorkout);
 	const finishWorkout = useWorkoutStore((state) => state.finishWorkout);
-	const timer = useTimer(startedAt);
+	const { formattedTime, elapsedSeconds } = useTimer(startedAt);
 	const routineId = routine.id;
 
 	const {
@@ -55,18 +61,22 @@ export const WorkoutForm = ({ routine }: WorkoutFormProps) => {
 		mode: 'onSubmit',
 		defaultValues: {
 			title: '',
+			description: '',
 			exercises: []
 		}
 	});
 
-	const formValues = useWatch({ control });
+	const formExercises = useWatch({
+		control,
+		name: 'exercises'
+	});
 
 	const { fields } = useFieldArray({
 		control,
 		name: 'exercises'
 	});
 
-	const workoutVolume = (formValues.exercises ?? []).reduce(
+	const workoutVolume = (formExercises ?? []).reduce(
 		(total, exercise) =>
 			total +
 			(exercise.sets ?? []).reduce(
@@ -79,7 +89,7 @@ export const WorkoutForm = ({ routine }: WorkoutFormProps) => {
 		0
 	);
 
-	const workoutSets = formValues.exercises?.reduce(
+	const workoutSets = formExercises?.reduce(
 		(total, exercise) =>
 			total + (exercise.sets ?? []).filter((set) => set.completed).length,
 		0
@@ -92,11 +102,8 @@ export const WorkoutForm = ({ routine }: WorkoutFormProps) => {
 			});
 			return;
 		}
-
 		clearErrors('root');
-
-		console.log(data);
-		// saveWorkout(data);
+		saveWorkout(data);
 	};
 
 	const onDeleteWorkout = () => {
@@ -107,30 +114,38 @@ export const WorkoutForm = ({ routine }: WorkoutFormProps) => {
 
 	const { mutate: saveWorkout, isPending: loading } = useMutation({
 		mutationFn: async (data: RoutineFormOutput) => {
-			// if (mode === 'create') {
-			// 	return postRoutine(data);
-			// }
+			const dataWorkout = {
+				...data,
+				duration: elapsedSeconds,
+				createdAt: new Date()
+			};
+
+			if (mode === 'create') {
+				return postWorkout(dataWorkout);
+			}
 			// const routineId = routine?.id;
 			// if (routineId) {
 			// 	return patchRoutineById(routineId, data);
 			// }
 		},
 		onSuccess: async () => {
-			await queryClient.invalidateQueries({
-				queryKey: ['routines']
-			});
-			const routineId = routine?.id;
-			if (routineId) {
-				await queryClient.invalidateQueries({
-					queryKey: ['routine', routine.id]
-				});
-			}
-			router.replace('/routine');
-			// if (mode === 'create') {
-			// 	toast.success('Routine successfully created.');
-			// } else {
-			// 	toast.success('Routine successfully updated.');
+			// await queryClient.invalidateQueries({
+			// 	queryKey: ['routines']
+			// });
+			// const routineId = routine?.id;
+			// if (routineId) {
+			// 	await queryClient.invalidateQueries({
+			// 		queryKey: ['routine', routine.id]
+			// 	});
 			// }
+
+			finishWorkout();
+			router.replace('/routine');
+			if (mode === 'create') {
+				toast.success('Workout successfully created.');
+			} else {
+				toast.success('Workout successfully updated.');
+			}
 		},
 		onError: (error: ApiError) => {
 			const errorObj = error;
@@ -164,10 +179,13 @@ export const WorkoutForm = ({ routine }: WorkoutFormProps) => {
 	}, [routine]);
 
 	useEffect(() => {
-		if (isDirty) {
-			setWorkout(routineId, formValues as RoutineFormInput);
-		}
-	}, [formValues]);
+		if (!isDirty) return;
+
+		setWorkout(routineId, {
+			...workout,
+			exercises: formExercises ?? []
+		} as RoutineFormInput);
+	}, [formExercises]);
 
 	return (
 		<div className="flex flex-col gap-4">
@@ -194,7 +212,7 @@ export const WorkoutForm = ({ routine }: WorkoutFormProps) => {
 						size="lg"
 						loading={loading}
 						variant="secondary"
-						iconLeft={<FloppyDiskIcon />}
+						iconRight={<FloppyDiskIcon />}
 						onClick={handleSubmit(onSaveWorkout)}
 					>
 						Save Workout
@@ -202,10 +220,12 @@ export const WorkoutForm = ({ routine }: WorkoutFormProps) => {
 				</div>
 			</div>
 
-			<div className="flex flex-col gap-4 sm:flex-row">
+			<div className="flex flex-row gap-4">
 				<div className="flex w-26 flex-col gap-1">
 					<span className="text-xs text-muted-foreground">Duration</span>
-					<span className="text-sm text-secondary tabular-nums">{timer}</span>
+					<span className="text-sm text-secondary tabular-nums">
+						{formattedTime}
+					</span>
 				</div>
 				<div className="flex w-20 flex-col gap-1">
 					<span className="text-xs text-muted-foreground">Volume</span>
@@ -223,7 +243,27 @@ export const WorkoutForm = ({ routine }: WorkoutFormProps) => {
 
 			<Separator />
 
-			<span className="text-primary">{routine?.title}</span>
+			{/* <span className="text-primary">{routine?.title}</span> */}
+
+			<FormInput
+				required
+				disabled={loading}
+				control={control}
+				name="title"
+				label="Title Workout"
+				placeholder="Enter Title Workout"
+				type="text"
+				autoComplete="off"
+			/>
+
+			<FormTextarea
+				disabled={loading}
+				control={control}
+				name="description"
+				label="Description"
+				placeholder="How did your workout go? Leave some notes here..."
+				className="resize-none min-h-20"
+			/>
 
 			{fields.map((field, index) => {
 				const exercise = routine?.exercises.find(
@@ -255,7 +295,7 @@ export const WorkoutForm = ({ routine }: WorkoutFormProps) => {
 				title={`Discard '${routine.title}' Workout`}
 				description="Are you sure you want to discard this workout?"
 				deleteText="Discard"
-				open={showModalDeleteWorkou}
+				open={showModalDeleteWorkout}
 				loading={false}
 				onOpenChange={setShowModalDeleteWorkout}
 				onDelete={onDeleteWorkout}
