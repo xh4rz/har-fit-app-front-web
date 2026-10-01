@@ -8,3 +8,4 @@ export * from './capitalize';
 export * from './getCroppedImage';
 export * from './formatDate';
 export * from './getRestTimerOptions';
+export * from './formatDuration';
