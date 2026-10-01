@@ -3,6 +3,7 @@ export * from './SidebarNavigation';
 export * from './SidebarUserMenu';
 export * from './ExerciseDetail';
 export * from './ExerciseForm';
+export * from './AlertDialog';
 export * from './DeleteAlertDialog';
 export * from './ExerciseList';
 export * from './RoutineForm';

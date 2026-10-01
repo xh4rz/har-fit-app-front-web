@@ -5,32 +5,38 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FieldValues, useFieldArray, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
+import { useTimer } from '@/hooks';
 import {
 	RoutineFormInput,
 	RoutineFormOutput,
 	workoutFormSchema
 } from '@/modules/routine/validation/routineFormSchema';
 import { useWorkoutStore } from '@/modules/workout/store/useWorkoutStore';
+import { postWorkout } from '@/modules/workout/services';
+import { SuccessConfetti } from '@/components/atoms';
 import {
 	ExerciseRoutineItem,
 	FormInput,
 	FormTextarea
 } from '@/components/molecules';
+import { AlertDialog } from '@/components/organism';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { DeleteAlertDialog } from '../DeleteAlertDialog';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
+import { formatDuration, setFormError } from '@/utils';
 import {
 	ArrowLeftIcon,
 	FloppyDiskIcon,
 	TrashIcon
 } from '@phosphor-icons/react';
-import { setFormError } from '@/utils';
-import { ApiError, RoutineResponse } from '@/infrastructure/interfaces';
-import { useTimer } from '@/hooks';
-import { postWorkout } from '@/modules/workout/services';
+import {
+	ApiError,
+	RoutineResponse,
+	WorkoutResponse
+} from '@/infrastructure/interfaces';
 
 interface WorkoutFormProps {
 	mode: 'create' | 'edit';
@@ -39,8 +45,11 @@ interface WorkoutFormProps {
 
 export const WorkoutForm = ({ mode, routine }: WorkoutFormProps) => {
 	const router = useRouter();
-	const queryClient = useQueryClient();
 	const [showModalDeleteWorkout, setShowModalDeleteWorkout] = useState(false);
+	const [showModalSuccessWorkout, setShowModalSuccessWorkout] = useState(false);
+	const [savedWorkout, setSavedWorkout] = useState<WorkoutResponse | null>(
+		null
+	);
 	const workout = useWorkoutStore((state) => state.workout);
 	const startedAt = useWorkoutStore((state) => state.startedAt);
 	const setWorkout = useWorkoutStore((state) => state.setWorkout);
@@ -119,7 +128,6 @@ export const WorkoutForm = ({ mode, routine }: WorkoutFormProps) => {
 				duration: elapsedSeconds,
 				createdAt: new Date()
 			};
-
 			if (mode === 'create') {
 				return postWorkout(dataWorkout);
 			}
@@ -128,7 +136,7 @@ export const WorkoutForm = ({ mode, routine }: WorkoutFormProps) => {
 			// 	return patchRoutineById(routineId, data);
 			// }
 		},
-		onSuccess: async () => {
+		onSuccess: async (workout) => {
 			// await queryClient.invalidateQueries({
 			// 	queryKey: ['routines']
 			// });
@@ -138,14 +146,10 @@ export const WorkoutForm = ({ mode, routine }: WorkoutFormProps) => {
 			// 		queryKey: ['routine', routine.id]
 			// 	});
 			// }
-
+			if (!workout) return;
 			finishWorkout();
-			router.replace('/routine');
-			if (mode === 'create') {
-				toast.success('Workout successfully created.');
-			} else {
-				toast.success('Workout successfully updated.');
-			}
+			setSavedWorkout(workout);
+			setShowModalSuccessWorkout(true);
 		},
 		onError: (error: ApiError) => {
 			const errorObj = error;
@@ -243,8 +247,6 @@ export const WorkoutForm = ({ mode, routine }: WorkoutFormProps) => {
 
 			<Separator />
 
-			{/* <span className="text-primary">{routine?.title}</span> */}
-
 			<FormInput
 				required
 				disabled={loading}
@@ -300,6 +302,65 @@ export const WorkoutForm = ({ mode, routine }: WorkoutFormProps) => {
 				onOpenChange={setShowModalDeleteWorkout}
 				onDelete={onDeleteWorkout}
 			/>
+
+			<AlertDialog
+				open={showModalSuccessWorkout}
+				onOpenChange={setShowModalSuccessWorkout}
+				title="Workout saved"
+				description="Great work. Here's your workout summary."
+				acceptText="Done"
+				showCancel={false}
+				onAccept={() => router.replace('/home')}
+			>
+				{savedWorkout && (
+					<div className="space-y-4">
+						<div className="flex flex-col gap-1">
+							<span className="text-lg tracking-tight">
+								{savedWorkout.title}
+							</span>
+						</div>
+						<div className="grid grid-cols-2 gap-2">
+							<div className="flex flex-col gap-1 rounded-xl border border-border p-4">
+								<span className="text-xs text-muted-foreground">Duration</span>
+								<span className="text-xl font-bold tabular-nums text-primary">
+									{formatDuration(savedWorkout.duration)}
+								</span>
+							</div>
+
+							<div className="flex flex-col gap-1 rounded-xl border border-border p-4">
+								<span className="text-xs text-muted-foreground">Volume</span>
+								<span className="text-xl font-bold tabular-nums text-primary">
+									{savedWorkout.volume} kg
+								</span>
+							</div>
+							<div className="flex flex-col gap-1 rounded-xl border border-border p-4">
+								<span className="text-xs text-muted-foreground">Exercises</span>
+								<span className="text-xl font-bold tabular-nums text-primary">
+									{savedWorkout.exercises.length}
+								</span>
+							</div>
+							<div className="flex flex-col gap-1 rounded-xl border border-border p-4">
+								<span className="text-xs text-muted-foreground">Sets</span>
+								<span className="text-xl font-bold tabular-nums text-primary">
+									{savedWorkout.sets}
+								</span>
+							</div>
+						</div>
+						<div className="flex flex-col gap-1">
+							<span className="text-xs text-muted-foreground">Exercises</span>
+							<ul className="list-inside list-disc space-y-1 text-sm">
+								{savedWorkout.exercises.map((exercise, index) => (
+									<li key={`${exercise.exerciseId}-${index}`}>
+										{exercise.title}
+									</li>
+								))}
+							</ul>
+						</div>
+					</div>
+				)}
+			</AlertDialog>
+
+			{showModalSuccessWorkout && savedWorkout && <SuccessConfetti />}
 		</div>
 	);
 };
