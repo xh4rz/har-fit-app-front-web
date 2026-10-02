@@ -89,9 +89,9 @@ export const RoutineView = () => {
 			<Card className="lg:flex-2 min-h-96 rounded-lg p-4 flex flex-col">
 				{dataRoutines?.length !== 0 ? (
 					<div className="w-full space-y-4">
-						<div className="flex items-center justify-between text-muted-foreground">
-							<h3 className="text-sm font-bold">My Routines</h3>
-							<span className="text-sm ">{dataRoutines?.length}</span>
+						<div className="flex items-center justify-between text-primary font-bold">
+							<h3 className="text-sm">Routines</h3>
+							<span className="text-sm">{dataRoutines?.length}</span>
 						</div>
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full items-stretch">
 							{dataRoutines?.map((routine) => {

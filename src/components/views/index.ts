@@ -6,6 +6,7 @@ export * from './RoutineView';
 export * from './RoutineCreateView';
 export * from './RoutineEditView';
 export * from './HomeView';
-export * from './ProfileView';
+export * from './SettingsProfileView';
 export * from './ThemeView';
 export * from './WorkoutView';
+export * from './ProfileView';
