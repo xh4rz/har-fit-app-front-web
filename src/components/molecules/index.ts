@@ -21,3 +21,6 @@ export * from './UserAvatar';
 export * from './FormTextarea';
 export * from './FormDatePicker';
 export * from './ProfileSkeleton';
+export * from './ExerciseSummaryItem';
+export * from './WorkoutStats';
+export * from './WorkoutUserInfo';

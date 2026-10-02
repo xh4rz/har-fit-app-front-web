@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FieldValues, useFieldArray, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTimer } from '@/hooks';
 import {
 	RoutineFormInput,
@@ -18,7 +18,8 @@ import { SuccessConfetti } from '@/components/atoms';
 import {
 	ExerciseRoutineItem,
 	FormInput,
-	FormTextarea
+	FormTextarea,
+	WorkoutStats
 } from '@/components/molecules';
 import { AlertDialog } from '@/components/organism';
 import { Button, buttonVariants } from '@/components/ui/button';
@@ -45,6 +46,7 @@ interface WorkoutFormProps {
 
 export const WorkoutForm = ({ mode, routine }: WorkoutFormProps) => {
 	const router = useRouter();
+	const queryClient = useQueryClient();
 	const [showModalDeleteWorkout, setShowModalDeleteWorkout] = useState(false);
 	const [showModalSuccessWorkout, setShowModalSuccessWorkout] = useState(false);
 	const [savedWorkout, setSavedWorkout] = useState<WorkoutResponse | null>(
@@ -147,6 +149,7 @@ export const WorkoutForm = ({ mode, routine }: WorkoutFormProps) => {
 			// 	});
 			// }
 			if (!workout) return;
+			await queryClient.invalidateQueries({ queryKey: ['workouts'] });
 			finishWorkout();
 			setSavedWorkout(workout);
 			setShowModalSuccessWorkout(true);
@@ -224,22 +227,11 @@ export const WorkoutForm = ({ mode, routine }: WorkoutFormProps) => {
 				</div>
 			</div>
 
-			<div className="flex flex-row gap-4">
-				<div className="flex w-26 flex-col gap-1">
-					<span className="text-xs text-muted-foreground">Duration</span>
-					<span className="text-sm text-secondary tabular-nums">
-						{formattedTime}
-					</span>
-				</div>
-				<div className="flex w-20 flex-col gap-1">
-					<span className="text-xs text-muted-foreground">Volume</span>
-					<span className="text-sm text-secondary">{workoutVolume} kg</span>
-				</div>
-				<div className="flex w-24 flex-col gap-1 justify-center">
-					<span className="text-xs text-muted-foreground">Sets</span>
-					<span className="text-xs text-secondary">{workoutSets}</span>
-				</div>
-			</div>
+			<WorkoutStats
+				duration={formattedTime}
+				volume={workoutVolume}
+				sets={workoutSets}
+			/>
 
 			{errors.root && (
 				<span className="text-destructive">{errors.root.message}</span>
@@ -310,7 +302,7 @@ export const WorkoutForm = ({ mode, routine }: WorkoutFormProps) => {
 				description="Great work. Here's your workout summary."
 				acceptText="Done"
 				showCancel={false}
-				onAccept={() => router.replace('/home')}
+				onAccept={() => router.replace('/profile')}
 			>
 				{savedWorkout && (
 					<div className="space-y-4">

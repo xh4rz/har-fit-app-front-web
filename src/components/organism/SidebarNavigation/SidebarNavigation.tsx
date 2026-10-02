@@ -22,7 +22,7 @@ export const SidebarNavigation = ({
 					<SidebarMenuItemLink
 						key={item.name}
 						item={item}
-						isActive={pathname.includes(item.url)}
+						isActive={pathname === item.url}
 						open={open}
 					/>
 				))}

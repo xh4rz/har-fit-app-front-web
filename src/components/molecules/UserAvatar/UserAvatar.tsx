@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import { getInitials } from '@/utils';
 
 interface UserAvatarProps {
-	src?: string | Blob | undefined;
+	src?: string | Blob | undefined | null;
 	name?: string;
 	className?: string;
 }

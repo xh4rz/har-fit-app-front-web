@@ -47,7 +47,7 @@ export const SidebarUserMenu = ({
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
 							<SidebarMenuButton className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
-								<UserAvatar src={user?.imageUrl || ''} name={user?.fullname} />
+								<UserAvatar src={user?.imageUrl} name={user?.fullname} />
 								{open && (
 									<>
 										<div className="grid flex-1 text-left text-sm leading-tight">

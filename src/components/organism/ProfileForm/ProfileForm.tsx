@@ -191,7 +191,7 @@ export const ProfileForm = () => {
 			<div>
 				<div className="flex items-center gap-4">
 					<UserAvatar
-						src={user?.imageUrl ?? ''}
+						src={user?.imageUrl}
 						name={user?.fullname}
 						className="w-25 h-25"
 					/>

@@ -3,6 +3,7 @@ import { parseAxiosError } from '@/utils';
 import { useAuthStore } from '@/modules/auth/store/useAuthStore';
 import { authRefreshToken } from '@/modules/auth/services/auth';
 import { clearAuthCookies } from '@/modules/auth/services/clearAuthCookies';
+import { reactQueryClient } from '@/context';
 
 const baseConfig: AxiosRequestConfig = {
 	baseURL: '/api',
@@ -46,6 +47,8 @@ axiosClient.interceptors.response.use(
 				refreshingToken = null;
 
 				useAuthStore.getState().logout();
+
+				reactQueryClient.clear();
 
 				clearAuthCookies();
 

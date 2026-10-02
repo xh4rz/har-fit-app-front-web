@@ -1,6 +1,7 @@
 'use client';
 
 import { usePathname, useRouter } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
 import {
 	Sidebar,
 	SidebarContent,
@@ -8,7 +9,12 @@ import {
 	SidebarHeader,
 	useSidebar
 } from '@/components/ui/sidebar';
-import { BarbellIcon, FolderPlusIcon, HouseIcon } from '@phosphor-icons/react';
+import {
+	BarbellIcon,
+	FolderPlusIcon,
+	HouseIcon,
+	UserIcon
+} from '@phosphor-icons/react';
 import { useAuthStore } from '@/modules/auth/store/useAuthStore';
 import { SidebarNavigation, SidebarUserMenu } from '@/components/organism';
 import { SidebarBrand } from '@/components/molecules';
@@ -29,6 +35,11 @@ const menuItems: MenuItem[] = [
 		name: 'Routine',
 		url: '/routine',
 		icon: FolderPlusIcon
+	},
+	{
+		name: 'Profile',
+		url: '/profile',
+		icon: UserIcon
 	}
 ];
 
@@ -37,12 +48,15 @@ export const AppSidebar = () => {
 
 	const pathname = usePathname();
 
+	const queryClient = useQueryClient();
+
 	const { user, loading, logout } = useAuthStore();
 
 	const { open, isMobile } = useSidebar();
 
 	const handleLogout = async () => {
 		await logout();
+		queryClient.clear();
 		router.replace('/login');
 	};
 
