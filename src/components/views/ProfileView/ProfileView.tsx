@@ -1,10 +1,14 @@
 'use client';
 
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '@/modules/auth/store/useAuthStore';
-import { getWorkouts } from '@/modules/workout/services';
+import { deleteWorkoutById, getWorkouts } from '@/modules/workout/services';
+import { DeleteAlertDialog } from '@/components/organism';
+import { toast } from 'sonner';
 import {
+	ActionsDropdown,
 	ExerciseSummaryItem,
 	UserAvatar,
 	WorkoutStats,
@@ -14,13 +18,17 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Separator } from '@/components/ui/separator';
-
 import { formatDuration } from '@/utils';
 import { BarbellIcon, PencilSimpleIcon } from '@phosphor-icons/react';
 
 export const ProfileView = () => {
 	const router = useRouter();
+	const queryClient = useQueryClient();
 	const user = useAuthStore((state) => state.user);
+	const [selectedWorkoutId, setSelectedWorkoutId] = useState<string>('');
+	const [selectedWorkoutTitle, setSelectedWorkoutTitle] = useState<string>('');
+	const [showModalDeleteWorkout, setShowModalDeleteWorkout] = useState(false);
+
 	const {
 		data: dataWorkouts,
 		isPending: isPendingWorkouts,
@@ -30,6 +38,28 @@ export const ProfileView = () => {
 		queryFn: () => getWorkouts(),
 		enabled: Boolean(user)
 	});
+
+	const { mutate: deleteWorkout, isPending: isPendingDeleteWorkout } =
+		useMutation({
+			mutationFn: () => deleteWorkoutById(selectedWorkoutId),
+			onSuccess: async () => {
+				await queryClient.invalidateQueries({
+					queryKey: ['workouts']
+				});
+				setShowModalDeleteWorkout(false);
+				toast.error('Workout successfully removed.');
+			}
+		});
+
+	const handleEditWorkout = (id: string) => {
+		router.push(`/workout/edit/${id}`);
+	};
+
+	const handleDeleteWorkout = (id: string, title: string) => {
+		setSelectedWorkoutId(id);
+		setSelectedWorkoutTitle(title);
+		setShowModalDeleteWorkout(true);
+	};
 
 	if (!user) {
 		return (
@@ -94,14 +124,27 @@ export const ProfileView = () => {
 					{dataWorkouts.map((workout) => (
 						<Card key={workout.id} className=" md:w-1/2 rounded-lg p-4">
 							<div className="flex h-full flex-col gap-4">
-								<WorkoutUserInfo
-									imageUrl={user.imageUrl}
-									fullname={user.fullname}
-									username={user.username}
-									createdAt={workout.createdAt}
-								/>
+								<div className="flex justify-between gap-4">
+									<WorkoutUserInfo
+										imageUrl={user.imageUrl}
+										fullname={user.fullname}
+										username={user.username}
+										createdAt={workout.createdAt}
+									/>
+									<ActionsDropdown
+										onEdit={() => handleEditWorkout(workout.id)}
+										onDelete={() =>
+											handleDeleteWorkout(workout.id, workout.title)
+										}
+									/>
+								</div>
 
-								<h4 className="font-semibold">{workout.title}</h4>
+								<div>
+									<h4 className="font-semibold">{workout.title}</h4>
+									<p className="text-muted-foreground line-clamp-3 text-xs">
+										{workout.description}
+									</p>
+								</div>
 
 								<WorkoutStats
 									duration={formatDuration(workout.duration)}
@@ -142,6 +185,15 @@ export const ProfileView = () => {
 					</span>
 				</Card>
 			)}
+
+			<DeleteAlertDialog
+				title={`Delete '${selectedWorkoutTitle}' Workout`}
+				description="Are you sure you want to delete this workout?"
+				open={showModalDeleteWorkout}
+				loading={isPendingDeleteWorkout}
+				onOpenChange={setShowModalDeleteWorkout}
+				onDelete={deleteWorkout}
+			/>
 		</div>
 	);
 };

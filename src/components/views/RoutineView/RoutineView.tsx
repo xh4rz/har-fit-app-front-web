@@ -33,6 +33,8 @@ export const RoutineView = () => {
 	const [showModalDeleteRoutine, setShowModalDeleteRoutine] = useState(false);
 	const routineId = useWorkoutStore((state) => state.routineId);
 	const startedAt = useWorkoutStore((state) => state.startedAt);
+	const finishWorkout = useWorkoutStore((state) => state.finishWorkout);
+
 	const { formattedTime } = useTimer(startedAt);
 	const hasWorkoutInProgress = !!routineId && !!startedAt;
 
@@ -52,6 +54,7 @@ export const RoutineView = () => {
 	};
 
 	const handleStartRoutine = (id: string) => {
+		finishWorkout();
 		router.push(`/workout/${id}`);
 	};
 
