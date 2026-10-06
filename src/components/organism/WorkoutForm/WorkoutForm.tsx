@@ -13,7 +13,7 @@ import {
 	workoutFormSchema
 } from '@/modules/routine/validation/routineFormSchema';
 import { useWorkoutStore } from '@/modules/workout/store/useWorkoutStore';
-import { postWorkout } from '@/modules/workout/services';
+import { patchWorkoutById, postWorkout } from '@/modules/workout/services';
 import { SuccessConfetti } from '@/components/atoms';
 import {
 	ExerciseRoutineItem,
@@ -39,14 +39,16 @@ import {
 	WorkoutResponse
 } from '@/infrastructure/interfaces';
 
-interface WorkoutFormProps {
-	mode: 'create' | 'edit';
-	routine: RoutineResponse;
-}
+type WorkoutFormProps =
+	| { mode: 'create'; routine: RoutineResponse }
+	| { mode: 'edit'; routine: WorkoutResponse };
 
 export const WorkoutForm = ({ mode, routine }: WorkoutFormProps) => {
 	const router = useRouter();
 	const queryClient = useQueryClient();
+	const sourceId = routine.id;
+	const isModeCreate = mode === 'create';
+	const isModeEdit = mode === 'edit';
 	const [showModalDeleteWorkout, setShowModalDeleteWorkout] = useState(false);
 	const [showModalSuccessWorkout, setShowModalSuccessWorkout] = useState(false);
 	const [savedWorkout, setSavedWorkout] = useState<WorkoutResponse | null>(
@@ -57,8 +59,9 @@ export const WorkoutForm = ({ mode, routine }: WorkoutFormProps) => {
 	const setWorkout = useWorkoutStore((state) => state.setWorkout);
 	const startWorkout = useWorkoutStore((state) => state.startWorkout);
 	const finishWorkout = useWorkoutStore((state) => state.finishWorkout);
-	const { formattedTime, elapsedSeconds } = useTimer(startedAt);
-	const routineId = routine.id;
+	const { formattedTime, elapsedSeconds } = useTimer(
+		isModeCreate ? startedAt : null
+	);
 
 	const {
 		control,
@@ -106,6 +109,10 @@ export const WorkoutForm = ({ mode, routine }: WorkoutFormProps) => {
 		0
 	);
 
+	const displayedDuration = isModeEdit
+		? formatDuration(routine.duration)
+		: formattedTime;
+
 	const onSaveWorkout = (data: RoutineFormOutput) => {
 		if (workoutSets === 0) {
 			setError('root', {
@@ -123,64 +130,75 @@ export const WorkoutForm = ({ mode, routine }: WorkoutFormProps) => {
 		router.replace('/routine');
 	};
 
+	const onNavigateToProfile = () => {
+		router.replace('/profile');
+	};
+
 	const { mutate: saveWorkout, isPending: loading } = useMutation({
 		mutationFn: async (data: RoutineFormOutput) => {
 			const dataWorkout = {
 				...data,
-				duration: elapsedSeconds,
-				createdAt: new Date()
+				duration: isModeCreate ? elapsedSeconds : routine.duration
 			};
-			if (mode === 'create') {
+			if (isModeCreate) {
 				return postWorkout(dataWorkout);
+			} else {
+				if (sourceId) {
+					return patchWorkoutById(sourceId, dataWorkout);
+				}
 			}
-			// const routineId = routine?.id;
-			// if (routineId) {
-			// 	return patchRoutineById(routineId, data);
-			// }
 		},
 		onSuccess: async (workout) => {
-			// await queryClient.invalidateQueries({
-			// 	queryKey: ['routines']
-			// });
-			// const routineId = routine?.id;
-			// if (routineId) {
-			// 	await queryClient.invalidateQueries({
-			// 		queryKey: ['routine', routine.id]
-			// 	});
-			// }
 			if (!workout) return;
+
 			await queryClient.invalidateQueries({ queryKey: ['workouts'] });
-			finishWorkout();
-			setSavedWorkout(workout);
-			setShowModalSuccessWorkout(true);
+
+			if (isModeCreate) {
+				finishWorkout();
+				setSavedWorkout(workout);
+				setShowModalSuccessWorkout(true);
+			} else {
+				await queryClient.invalidateQueries({
+					queryKey: ['workout', sourceId]
+				});
+				onNavigateToProfile();
+				toast.success('Workout successfully updated.');
+			}
 		},
 		onError: (error: ApiError) => {
 			const errorObj = error;
 			setFormError(setError, errorObj);
+			toast.error('Failed to save workout. Please try again.');
 		}
 	});
 
 	useEffect(() => {
 		if (!routine) return;
 
-		if (workout) {
+		if (isModeCreate && workout) {
 			reset(workout);
 			return;
 		}
 
 		const initialWorkout: RoutineFormInput = {
 			title: routine.title,
-			exercises: routine.exercises.map((ex) => ({
-				exerciseId: ex.exerciseId,
-				restTimer: ex.restTimer,
-				sets: ex.sets.map((set) => ({
+			description: isModeEdit ? (routine.description ?? '') : '',
+			exercises: routine.exercises.map((exercise) => ({
+				exerciseId: exercise.exerciseId,
+				restTimer: exercise.restTimer,
+				sets: exercise.sets.map((set) => ({
 					...set,
 					completed: set.completed ?? false
 				}))
 			}))
 		};
 
-		setWorkout(routineId, initialWorkout);
+		if (isModeEdit) {
+			reset(initialWorkout);
+			return;
+		}
+
+		setWorkout(sourceId, initialWorkout);
 		reset(initialWorkout);
 		startWorkout();
 	}, [routine]);
@@ -188,7 +206,7 @@ export const WorkoutForm = ({ mode, routine }: WorkoutFormProps) => {
 	useEffect(() => {
 		if (!isDirty) return;
 
-		setWorkout(routineId, {
+		setWorkout(sourceId, {
 			...workout,
 			exercises: formExercises ?? []
 		} as RoutineFormInput);
@@ -198,22 +216,26 @@ export const WorkoutForm = ({ mode, routine }: WorkoutFormProps) => {
 		<div className="flex flex-col gap-4">
 			<div className="flex items-center gap-2">
 				<Link
-					href="/routine"
+					href={isModeCreate ? '/routine' : `/profile`}
 					className={buttonVariants({ variant: 'outline', size: 'icon-lg' })}
 				>
 					<ArrowLeftIcon />
 				</Link>
 
-				<h2 className="text-2xl font-semibold">Workout</h2>
+				<h2 className="text-2xl font-semibold">
+					{isModeCreate ? 'Create' : 'Edit'} Workout
+				</h2>
 
 				<div className="ml-auto flex items-center gap-2">
-					<Button
-						size="icon-lg"
-						variant="destructive"
-						onClick={() => setShowModalDeleteWorkout(true)}
-					>
-						<TrashIcon />
-					</Button>
+					{isModeCreate && (
+						<Button
+							size="icon-lg"
+							variant="destructive"
+							onClick={() => setShowModalDeleteWorkout(true)}
+						>
+							<TrashIcon />
+						</Button>
+					)}
 
 					<Button
 						size="lg"
@@ -222,13 +244,13 @@ export const WorkoutForm = ({ mode, routine }: WorkoutFormProps) => {
 						iconRight={<FloppyDiskIcon />}
 						onClick={handleSubmit(onSaveWorkout)}
 					>
-						Save Workout
+						{isModeCreate ? 'Save' : 'Update'} Workout
 					</Button>
 				</div>
 			</div>
 
 			<WorkoutStats
-				duration={formattedTime}
+				duration={displayedDuration}
 				volume={workoutVolume}
 				sets={workoutSets}
 			/>
@@ -302,7 +324,7 @@ export const WorkoutForm = ({ mode, routine }: WorkoutFormProps) => {
 				description="Great work. Here's your workout summary."
 				acceptText="Done"
 				showCancel={false}
-				onAccept={() => router.replace('/profile')}
+				onAccept={onNavigateToProfile}
 			>
 				{savedWorkout && (
 					<div className="space-y-4">

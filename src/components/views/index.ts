@@ -10,3 +10,4 @@ export * from './SettingsProfileView';
 export * from './ThemeView';
 export * from './WorkoutView';
 export * from './ProfileView';
+export * from './WorkoutEditView';

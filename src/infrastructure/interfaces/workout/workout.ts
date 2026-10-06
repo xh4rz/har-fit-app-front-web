@@ -14,7 +14,6 @@ export interface WorkoutRequest {
 	title: string;
 	duration: number;
 	description?: string;
-	createdAt: Date;
 	exercises: WorkoutExercise[];
 }
 
@@ -22,9 +21,11 @@ export interface WorkoutResponse {
 	id: string;
 	title: string;
 	duration: number;
+	description: string | null;
 	volume: number;
 	sets: number;
 	createdAt: Date;
+	updatedAt: Date;
 	exercises: (WorkoutExercise & {
 		title: string;
 		video: string;

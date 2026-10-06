@@ -52,7 +52,7 @@ export const RoutineItem = ({
 					disabled={isStartDisabled}
 					onClick={onStart}
 				>
-					{isActive ? `Workout ${timer}` : 'Start Routine'}
+					{isActive ? `Workout ${timer}` : 'Start Workout'}
 				</Button>
 			</div>
 		</Card>
